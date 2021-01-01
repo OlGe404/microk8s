@@ -1,0 +1,39 @@
+---
+- name: install requirements
+  block:
+    - name: ansible-galaxy collections
+      command: "ansible-galaxy collection install -r {{ role_path }}/requirements.yaml"
+
+    - name: helm
+      become_method: sudo
+      become: true
+      snap:
+        name: helm
+        state: present
+        classic: yes
+
+- name: add codecentric helm repo
+  community.kubernetes.helm_repository:
+    name: codecentric
+    repo_url: "https://codecentric.github.io/helm-charts"
+
+- name: deploy helm chart
+  community.kubernetes.helm:
+    name: jenkins
+    namespace: "{{ jenkins.namespace }}"
+    chart_ref: codecentric/jenkins
+    chart_version: ~1.7
+    update_repo_cache: yes
+    wait: yes
+    values: "{{ lookup('template', 'jenkins.yaml') | from_yaml }}"
+  register: deployed_chart
+
+- name: check deployed_chart
+  debug:
+    msg: "{{ deployed_chart }}"
+    verbosity: 2
+
+- name: deploy podmonitor
+  community.kubernetes.k8s:
+    state: present
+    definition: "{{ lookup('template', 'podmonitor.yaml') | from_yaml }}"

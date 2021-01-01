@@ -1,0 +1,27 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ deployed_chart.status.name }}-master
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: master
+    app.kubernetes.io/instance: {{ deployed_chart.status.name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: {{ deployed_chart.status.name }}
+    helm.sh/chart: {{ deployed_chart.status.chart }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: master
+      app.kubernetes.io/instance: {{ deployed_chart.status.name }}
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: {{ deployed_chart.status.name }}
+  namespaceSelector:
+    matchNames:
+    - "{{ deployed_chart.status.namespace }}"
+  podMetricsEndpoints:
+    - port: http
+      path: /prometheus
+      scheme: http
+      interval: 60s
+      honorLabels: true
