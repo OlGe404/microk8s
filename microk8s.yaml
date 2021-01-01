@@ -2,6 +2,8 @@
   hosts: localhost
   vars:
     ansible_python_interpreter: auto
+  environment:
+    K8S_AUTH_KUBECONFIG: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
   roles:
     - role: install
       tags: ['install']
