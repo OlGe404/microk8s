@@ -3,7 +3,7 @@ This repo is meant to be used for the installation and setup of a local kubernet
 
 The installation and setup is done via ansible to ensure a deterministic state on multiple install and setup runs. It uses Microk8s and its add-ons to bootstrap a local kubernetes environment in an opinionated way. Check out [Microk8s](https://microk8s.io) to learn more about the idea behind it and its features.
 
-**Disclaimer**: The files in this repo are work-in-progress and not tested on anything other than my local setup (Ubuntu 20.10). If you do not use Ubuntu but want to use the playbook from this repo, install Microk8s on your machine and use the specific roles and tasks separately:
+**Disclaimer**: The files in this repo are work-in-progress and not tested on anything other than my local setup (Ubuntu 20.10). If you do not use Ubuntu but want to use the playbook from this repo to configure your Microk8s setup, install Microk8s on your machine and use the specific roles and tasks separately:
 ```yaml
 ansible-playbook microk8s.yaml \
   --extra-vars ansible_sudo_pass="<your sudo password>" \
