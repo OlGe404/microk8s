@@ -1,7 +1,7 @@
 #!/bin/bash
 
 grafana_host="https://grafana.microk8s.local"
-grafana_creds="admin:aHQEu6PMGfg85Nn"
+grafana_creds="admin:admin"
 grafana_datasource="prometheus"
 dashboard_ids=(9524);
 
