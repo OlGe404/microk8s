@@ -30,7 +30,7 @@ In addition to enabling the listed Microk8s add-ons, the ansible roles will edit
 
 * add the current user to the microk8s group to interact with Microk8s as a non-root user
 * append aliases for common commands like `microk8s kubectl` to the ~/.bash_aliases file
-* generate a ~/.kube/config file for the current user to be able to login and use the kubernetes-dashboard as cluster-admin
+* generate a ~/.kube/microk8s_config file for the current user to be able to login and use the kubernetes-dashboard as cluster-admin
 * create a local openssl pki and update ubuntus and mozilla firefoxes ca-store to ensure successful tls communication with mozilla firefox and cli programs like curl
 * deployment of a cert-manager setup to levearge a cluster-internal pki to secure in-cluster communication (for self-developed services) and ingress-routes via tls
 * add entries to the /etc/hosts file to make exposed ingress-routes accessible via *.microk8s.local urls
