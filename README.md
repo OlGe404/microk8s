@@ -12,7 +12,7 @@ ansible-playbook microk8s.yaml \
 ```
 
 ## Enabled add-ons
-Microk8s comes with add-ons that can be enabled to bootstrap a preconfigured deployment of the add-ons components. The following add-ons will be enabled:
+Microk8s comes with add-ons that can be enabled to bootstrap a preconfigured deployment of the add-on components. The following add-ons will be enabled:
 
 * rbac
 * dns
