@@ -1,0 +1,3 @@
+---
+microk8s:
+  version: 1.19
