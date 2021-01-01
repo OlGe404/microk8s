@@ -1,9 +1,6 @@
 ---
 - name: install requirements
   block:
-    - name: ansible-galaxy collections
-      command: "ansible-galaxy collection install -r {{ role_path }}/requirements.yaml"
-
     - name: helm
       become_method: sudo
       become: true
@@ -21,11 +18,12 @@
   community.kubernetes.helm:
     name: jenkins
     namespace: "{{ jenkins.namespace }}"
+    create_namespace: true
     chart_ref: codecentric/jenkins
     chart_version: ~1.7
     update_repo_cache: yes
     wait: yes
-    values: "{{ lookup('template', 'jenkins.yaml') | from_yaml }}"
+    values: "{{ lookup('file', 'jenkins.yaml') | from_yaml }}"
   register: deployed_chart
 
 - name: check deployed_chart
@@ -33,7 +31,8 @@
     msg: "{{ deployed_chart }}"
     verbosity: 2
 
-- name: deploy podmonitor
+- name: deploy templates for monitoring
   community.kubernetes.k8s:
     state: present
-    definition: "{{ lookup('template', 'podmonitor.yaml') | from_yaml }}"
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+  loop: "{{ query('fileglob', 'templates/*.yaml') }}"
