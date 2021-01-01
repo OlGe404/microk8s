@@ -23,5 +23,4 @@ spec:
     - port: http
       path: /prometheus
       scheme: http
-      interval: 60s
-      honorLabels: true
+      interval: 30s
