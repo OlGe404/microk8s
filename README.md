@@ -41,7 +41,7 @@ In addition to enabling the listed Microk8s add-ons, the ansible roles will edit
 
 ## Ingress Hosts
 After the installation and setup is done, the following services can be reached via webbrowser (mozilla firefox):
-* kubernetes-dashboard: https://dashboard.microk8s.local
+* kubernetes-dashboard: https://dashboard.microk8s.local (with the generated ~/.kube/microk8s_config file)
 * kibana: https://kibana.microk8s.local
 * prometheus: https://prometheus.microk8s.local
 * alertmanager: https://alertmanager.microk8s.local
@@ -49,6 +49,4 @@ After the installation and setup is done, the following services can be reached 
 * jenkins https://jenkins.microk8s.local
 
 ### Additional Ingress Hosts
-The certificate used to encrypt the tls communication for the ingress hosts was generated for `*.microk8s.local` domains, so it can be used for any additional services you want to deploy into your Microk8s setup.
-
-**Note:** Make sure your ingress-resources use the cert-manager annotation to dynamically create a valid tls-secret for your domain. Check out the `ing-*.yaml` files from the setup role to use them as a template.
+The certificate used to encrypt the tls communication for the ingress hosts is dynamically generated for the `*.microk8s.local` domains, so it can be used for any additional services you want to deploy into your Microk8s setup. Make sure your ingress-resources use the cert-manager annotation to dynamically create a valid tls-secret for your domain. Check out the `ing-*.yaml` files from the setup role to use them as a template and the [cert-manager docs](https://cert-manager.io/docs/usage/ingress/) for more details.
