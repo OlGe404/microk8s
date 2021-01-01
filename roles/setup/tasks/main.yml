@@ -1,0 +1,238 @@
+---
+- name: install requirements
+  block:
+    - name: python-pip
+      become_method: sudo
+      become: true
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: openshift pip-module
+      pip:
+        name: openshift
+        extra_args: --user
+
+    - name: libnss3-tools for certutil
+      apt:
+        name: libnss3-tools
+        state: present
+
+- name: enable microk8s.add_ons
+  command: "microk8s enable {{ item }}"
+  with_items: "{{ microk8s.add_ons }}"
+
+- name: create openssl ca certificate to sign ingress wildcard certificate
+  block:
+    - name: create dir for files
+      file:
+        path: "{{ lookup('env', 'HOME') }}/microk8s/tls/ca"
+        state: directory
+      register: tls_ca_dir
+
+    - name: check tls_ca_dir
+      debug:
+        msg: "{{ tls_ca_dir }}"
+        verbosity: 2
+
+    - name: create openssl ca private key
+      community.crypto.openssl_privatekey:
+        path: "{{ tls_ca_dir.path }}/microk8s_ca.pem"
+      register: tls_ca_key
+
+    - name: check tls_ca_key
+      debug:
+        msg: "{{ tls_ca_key }}"
+        verbosity: 2
+
+    - name: create openssl ca certificate signing request
+      community.crypto.openssl_csr:
+        path: "{{ tls_ca_dir.path }}/microk8s_ca.csr"
+        privatekey_path: "{{ tls_ca_key.filename }}"
+        country_name: "DE"
+        organization_name: "local microk8s CA company"
+        common_name: "microk8s.local"
+        basic_constraints:
+          CA:TRUE
+        basic_constraints_critical: yes
+        key_usage:
+          - digitalSignature
+          - keyEncipherment
+          - dataEncipherment
+          - keyAgreement
+          - keyCertSign
+        key_usage_critical: yes
+      register: tls_ca_csr
+
+    - name: check tls_ca_csr
+      debug:
+        msg: "{{ tls_ca_csr }}"
+        verbosity: 2
+
+    - name: create openssl ca certificate
+      community.crypto.x509_certificate:
+        path: "{{ tls_ca_dir.path }}/microk8s_ca.crt"
+        privatekey_path: "{{ tls_ca_key.filename }}"
+        csr_path: "{{ tls_ca_csr.filename }}"
+        provider: selfsigned
+      register: tls_ca_crt
+
+    - name: check tls_ca_crt
+      debug:
+        msg: "{{ tls_ca_crt }}"
+        verbosity: 2
+
+# - name: create and sign the ingress wildcard certificate
+#   block:
+#     - name: create dir for files
+#       file:
+#         path: "{{ lookup('env', 'HOME') }}/microk8s/tls/wildcard"
+#         state: directory
+#       register: tls_wildcard_dir
+
+#     - name: check tls_wildcard_dir
+#       debug:
+#         msg: "{{ tls_wildcard_dir }}"
+#         verbosity: 2
+
+#     - name: create openssl ingress wildcard private key
+#       community.crypto.openssl_privatekey:
+#         path: "{{ tls_wildcard_dir.path }}/ingress_wildcard.pem"
+#       register: tls_wildcard_key
+
+#     - name: check tls_wildcard_key
+#       debug:
+#         msg: "{{ tls_wildcard_key }}"
+#         verbosity: 2
+
+#     - name: create openssl ingress wildcard certificate signing request
+#       community.crypto.openssl_csr:
+#         path: "{{ tls_wildcard_dir.path }}/ingress_wildcard.csr"
+#         privatekey_path: "{{ tls_wildcard_key.filename }}"
+#         country_name: "DE"
+#         organization_name: "local microk8s wildcard company"
+#         common_name: microk8s.local
+#         subject_alt_name: DNS:*.microk8s.local
+#       register: tls_wildcard_csr
+
+#     - name: check tls_wildcard_csr
+#       debug:
+#         msg: "{{ tls_wildcard_csr }}"
+#         verbosity: 2
+
+#     - name: create and sign ingress wildcard certificate
+#       community.crypto.x509_certificate:
+#         path: "{{ tls_wildcard_dir.path }}/ingress_wildcard.crt"
+#         csr_path: "{{ tls_wildcard_csr.filename }}"
+#         ownca_path: "{{ tls_ca_crt.filename }}"
+#         ownca_privatekey_path: "{{ tls_ca_key.filename }}"
+#         provider: ownca
+#       register: tls_wildcard_crt
+
+#     - name: check tls_wildcard_crt
+#       debug:
+#         msg: "{{ tls_wildcard_crt }}"
+#         verbosity: 2
+
+- name: update-ca-certificates with generated ca-certificate
+  become_method: sudo
+  become: true
+  block:
+    - name: copy certificate to local ca-certificates dir
+      copy:
+        src: "{{ tls_ca_crt.filename }}"
+        dest: "/usr/local/share/ca-certificates"
+        owner: "{{ lookup('env', 'USER') }}"
+        group: root
+        mode: 0644
+    
+    - name: run update-ca-certificates
+      command: update-ca-certificates --verbose --fresh
+      register: update_ca_certificates
+
+    - debug:
+        msg: "{{ update_ca_certificates.stdout }}"
+        verbosity: 2
+
+- name: update firefox ca store
+  block:
+    - name: Find firefox profile dirs
+      find:
+        paths: "{{ lookup('env', 'HOME') }}/.mozilla/firefox"
+        file_type: directory
+        use_regex: yes
+        patterns: ['.*.default.*']
+      register: firefox_profile_dir
+
+    - name: check firefox_profile_dir
+      debug:
+        msg: "{{ firefox_profile_dir }}"
+        verbosity: 2
+
+    - name: import ca certificate into firefox
+      shell: |
+        certutil -A -n microk8s_ca -t 'TC,,' -i {{ tls_ca_crt.filename }} -d {{ item.path }}
+      args:
+        executable: /bin/bash
+      with_items: "{{ firefox_profile_dir.files }}"
+
+- name: alter hosts file for routing of ingress hosts
+  become_method: sudo
+  become: true
+  blockinfile:
+    path: /etc/hosts
+    marker: "# {mark} OF ANSIBLE MANAGED BLOCK FOR MICROK8S HOSTS"
+    block: |
+      127.0.0.1       dashboard.microk8s.local
+      127.0.0.1       kibana.microk8s.local
+      127.0.0.1       grafana.microk8s.local
+      127.0.0.1       prometheus.microk8s.local
+      127.0.0.1       alertmanager.microk8s.local
+      127.0.0.1       jenkins.microk8s.local
+
+- name: deploy cert-manager resources
+  block:
+    - name: add jetstack helm repo
+      community.kubernetes.helm_repository:
+        name: jetstack
+        repo_url: "https://charts.jetstack.io"
+
+    - name: deploy helm chart
+      community.kubernetes.helm:
+        name: cert-manager
+        namespace: "{{ cert_manager.namespace }}"
+        create_namespace: true
+        chart_ref: jetstack/cert-manager
+        chart_version: ~v1.1
+        update_repo_cache: yes
+        wait: yes
+        values: "{{ lookup('file', 'cert-manager/cert-manager.yaml') | from_yaml }}"
+      register: deployed_chart
+
+    - name: deploy secret for ca-issuer
+      shell: |
+        microk8s kubectl create secret tls ingress-ca \
+        --cert={{ tls_ca_crt.filename }} \
+        --key={{ tls_ca_key.filename }} \
+        --namespace {{ cert_manager.namespace }} \
+        -o yaml --dry-run=client | microk8s kubectl apply -f -
+      args:
+        executable: /bin/bash
+
+    - name: deploy cert-manager templates for issuer and monitoring
+      community.kubernetes.k8s:
+        definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+        state: present
+      loop: "{{ query('fileglob', 'templates/cert-manager/*.yaml') }}"
+
+- name: deploy kubernetes-dashboard
+  community.kubernetes.k8s:
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+    state: present
+  loop: "{{ query('fileglob', 'templates/kubernetes-dashboard/*.yaml') }}"
+
+- name: deploy ingress-resources
+  community.kubernetes.k8s:
+    state: present
+    src: "{{ item }}"
+  loop: "{{ query('fileglob', 'files/ing-*.yaml') }}"

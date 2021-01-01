@@ -1,0 +1,17 @@
+---
+microk8s:
+  add_ons:
+    - rbac
+    - dns
+    - helm3
+    - ingress
+    - storage
+    - fluentd
+    - prometheus
+    - registry
+
+kubernetes_dashboard:
+  namespace: kube-system
+
+cert_manager:
+  namespace: cert-manager
