@@ -71,4 +71,4 @@ After the installation and setup is done, the following services are available:
 ### Additional Ingress Hosts
 The certificate for the tls communication will be generated for `*.microk8s.local` domains from the cert-manager setup, so it can be used for any additional services you want to deploy into your Microk8s setup. 
 
-Make sure your ingress resources use the cert-manager annotation to automatically create a valid tls-secret for your domain. Check out the `files/ing-*.yaml` resources from the setup role or see the [cert-manager docs](https://cert-manager.io/docs/usage/ingress/) for more details.
+Make sure your ingress resources use the cert-manager annotation to automatically create a valid tls-secret for your domain. Check out the [files/ing-*.yaml](roles/setup/files) resources from the setup role or see the [cert-manager docs](https://cert-manager.io/docs/usage/ingress/) for more details.
