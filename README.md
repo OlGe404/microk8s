@@ -1,3 +1,13 @@
+# TL;DR
+```bash
+ansible-galaxy collection install -r requirements.yaml
+```
+
+```bash
+ansible-playbook microk8s.yaml \
+  --extra-vars ansible_sudo_pass="<your sudo password>"
+```
+
 # Goals for this Repo
 This repo is meant to be used for the installation and setup of a local kubernetes environment for development and test purposes.
 
@@ -40,7 +50,7 @@ In addition to enabling the listed Microk8s add-ons, the ansible roles will edit
 * deployment of podmonitors and grafana dashboards to ensure a comprehensive monitoring experience for the installed services via prometheus-stack
 
 ## Ingress Hosts
-After the installation and setup is done, the following services can be reached via webbrowser (mozilla firefox):
+After the installation and setup is done, the following services are available:
 * kubernetes-dashboard: https://dashboard.microk8s.local (with the generated ~/.kube/microk8s_config file)
 * kibana: https://kibana.microk8s.local
 * prometheus: https://prometheus.microk8s.local
