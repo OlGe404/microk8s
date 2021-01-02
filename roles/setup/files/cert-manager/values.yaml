@@ -157,7 +157,7 @@ prometheus:
   servicemonitor:
     enabled: true
     namespace: monitoring
-    prometheusInstance: default
+    prometheusInstance: k8s
     targetPort: 9402
     path: /metrics
     interval: 60s
