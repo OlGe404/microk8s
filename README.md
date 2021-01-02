@@ -11,6 +11,7 @@ ansible-playbook microk8s.yaml \
 # TOC
 * [Goal of this Repo](#Goals-of-this-Repo)
 * [Usage](#Usage)
+  * [Debugging](#Debugging)
   * [Extended Usage](#Extended-Usage)
 * [Enabled add-ons](#Enabled-add-ons)
 * [Additional configuration](#Additional-configuration)
@@ -39,6 +40,15 @@ ansible-playbook microk8s.yaml \
   --extra-vars ansible_sudo_pass="<your sudo password>"
 ```
 
+### Debugging
+If you want to see more details about what the playbook does, run
+```bash
+ansible-playbook microk8s.yaml \
+  --extra-vars ansible_sudo_pass="<your sudo password>" \
+  -vv
+```
+to enable a more verbose output for the playbook run.
+
 ### Extended Usage
 If you do not use Ubuntu, but want to use the playbook to configure your Microk8s setup, install Microk8s on your machine and use the individual roles/tasks separately:
 
@@ -48,6 +58,8 @@ ansible-playbook microk8s.yaml \
   --tags "jenkins" \
   --start-at-task "add codecentric helm repo"
 ```
+
+**Note:** When you want to deploy jenkins without running the setup role prior to it, you have to make sure helm is already installed on your machine and in the $PATH for your user.
 
 ## Enabled add-ons
 Microk8s comes with add-ons that can be enabled to bootstrap a preconfigured deployment for the add-on components. The following add-ons will be enabled:
