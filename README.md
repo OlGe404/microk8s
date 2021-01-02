@@ -61,7 +61,7 @@ Microk8s comes with add-ons that can be enabled to bootstrap a preconfigured dep
 * prometheus
 * registry
 
-**Note:** The dashboard add-on is not enabled on purpose, because its default configuration is not compatible with the ingress setup done by this playbook. The kubernetes-dashboard will be deployed seperately and accessible via the [ingress route](#Ingress-Hosts), so you dont have to use `kubectl proxy` or `kubectl port-forward` to access the UI in your browser.  
+**Note:** The dashboard add-on is not enabled on purpose, because its default configuration is not compatible with the ingress setup done by this playbook. The kubernetes-dashboard will be deployed seperately and accessible via the [ingress host](#Ingress-Hosts), so you don't have to use `kubectl proxy` or `kubectl port-forward` to access the UI in your browser.  
 
 ## Additional configuration
 In addition to enabling the listed Microk8s add-ons the playbook will edit, generate and deploy some files to ensure a comprehensive experience with the local kubernetes-cluster:
