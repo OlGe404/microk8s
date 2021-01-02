@@ -1,3 +1,4 @@
+---
 - name: install and setup microk8s with additional deployments
   hosts: localhost
   vars:
