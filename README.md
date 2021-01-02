@@ -25,7 +25,7 @@ The installation and setup is done via ansible to ensure a deterministic state o
 **Disclaimer:** The files in this repo are work-in-progress and not tested on anything but my local setup with Ubuntu 20.10 (Groovy Gorilla).
 
 ## Usage
-The playbook depends on ansible-galaxy collections to create the local pki via openssl, to deploy kubernetes manifests and helm charts. 
+The playbook depends on ansible-galaxy collections to create a local pki via openssl, deploy kubernetes manifests and helm charts. 
 
 To install the ansible-galaxy collections on your machine, run:
 
