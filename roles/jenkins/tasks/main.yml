@@ -13,6 +13,7 @@
     chart_version: ~1.7
     update_repo_cache: yes
     wait: yes
+    wait_timeout: 1200
     values: "{{ lookup('file', 'values.yaml') | from_yaml }}"
   register: deployed_chart
 
