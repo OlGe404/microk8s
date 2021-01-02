@@ -75,7 +75,7 @@ In addition to enabling the listed Microk8s add-ons the playbook will edit, gene
   * deploy a cert-manager setup to levearge a cluster-internal pki
   * add entries to the /etc/hosts file for `*.microk8s.local` ingress hosts
   * deploy ingress manifests for the installed services
-* deploy the kubernetes-dashboard with tls and altered settings for less frequent login requests
+* deploy the kubernetes-dashboard with altered settings for less frequent login requests and tls via ingress
 * deploy a jenkins-server with a baseline configuration of plugins to use within kubernetes
 * deploy podmonitors and grafana dashboards for a comprehensive monitoring experience via prometheus-stack
 
