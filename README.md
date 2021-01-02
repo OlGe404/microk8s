@@ -74,7 +74,7 @@ In addition to enabling the listed Microk8s add-ons the playbook will edit, gene
   * update mozilla firefoxes ca-store
   * deploy a cert-manager setup to levearge a cluster-internal pki
   * add entries to the /etc/hosts file for `*.microk8s.local` ingress hosts
-  * deploy ingress resources for the installed services
+  * deploy ingress manifests for the installed services
 * deploy the kubernetes-dashboard with tls and altered settings for less frequent login requests
 * deploy a jenkins-server with a baseline configuration of plugins to use within kubernetes
 * deploy podmonitors and grafana dashboards for a comprehensive monitoring experience via prometheus-stack
@@ -91,4 +91,4 @@ After the installation and setup is done, the following services are available:
 ### Additional Ingress Hosts
 The certificate for the tls communication will be generated for `*.microk8s.local` domains from the cert-manager setup, so it can be used for any additional services you want to deploy into your Microk8s setup. 
 
-Make sure your ingress resources use the cert-manager annotation to automatically create a valid tls-secret for your domain. Check out the [files/ing-*.yaml](roles/setup/files) resources from the setup role or see the [cert-manager docs](https://cert-manager.io/docs/usage/ingress/) for more details.
+Make sure your ingress manifests use the cert-manager annotation to automatically create a valid tls-secret for your domain. Check out the [files/ing-*.yaml](roles/setup/files) manifests from the setup role or see the [cert-manager docs](https://cert-manager.io/docs/usage/ingress/) for more details.
