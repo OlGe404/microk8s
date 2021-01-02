@@ -82,58 +82,6 @@
         msg: "{{ tls_ca_crt }}"
         verbosity: 2
 
-# - name: create and sign the ingress wildcard certificate
-#   block:
-#     - name: create dir for files
-#       file:
-#         path: "{{ lookup('env', 'HOME') }}/microk8s/tls/wildcard"
-#         state: directory
-#       register: tls_wildcard_dir
-
-#     - name: check tls_wildcard_dir
-#       debug:
-#         msg: "{{ tls_wildcard_dir }}"
-#         verbosity: 2
-
-#     - name: create openssl ingress wildcard private key
-#       community.crypto.openssl_privatekey:
-#         path: "{{ tls_wildcard_dir.path }}/ingress_wildcard.pem"
-#       register: tls_wildcard_key
-
-#     - name: check tls_wildcard_key
-#       debug:
-#         msg: "{{ tls_wildcard_key }}"
-#         verbosity: 2
-
-#     - name: create openssl ingress wildcard certificate signing request
-#       community.crypto.openssl_csr:
-#         path: "{{ tls_wildcard_dir.path }}/ingress_wildcard.csr"
-#         privatekey_path: "{{ tls_wildcard_key.filename }}"
-#         country_name: "DE"
-#         organization_name: "local microk8s wildcard company"
-#         common_name: microk8s.local
-#         subject_alt_name: DNS:*.microk8s.local
-#       register: tls_wildcard_csr
-
-#     - name: check tls_wildcard_csr
-#       debug:
-#         msg: "{{ tls_wildcard_csr }}"
-#         verbosity: 2
-
-#     - name: create and sign ingress wildcard certificate
-#       community.crypto.x509_certificate:
-#         path: "{{ tls_wildcard_dir.path }}/ingress_wildcard.crt"
-#         csr_path: "{{ tls_wildcard_csr.filename }}"
-#         ownca_path: "{{ tls_ca_crt.filename }}"
-#         ownca_privatekey_path: "{{ tls_ca_key.filename }}"
-#         provider: ownca
-#       register: tls_wildcard_crt
-
-#     - name: check tls_wildcard_crt
-#       debug:
-#         msg: "{{ tls_wildcard_crt }}"
-#         verbosity: 2
-
 - name: update-ca-certificates with generated ca-certificate
   become_method: sudo
   become: true
