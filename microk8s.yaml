@@ -1,5 +1,5 @@
 ---
-- name: install and setup microk8s with additional deployments
+- name: install and setup local one-node microk8s environment
   hosts: localhost
   vars:
     ansible_python_interpreter: auto
