@@ -1,5 +1,5 @@
 ---
-- name: install requirements
+- name: install helm
   block:
     - name: helm
       become_method: sudo
@@ -23,7 +23,7 @@
     chart_version: ~1.7
     update_repo_cache: yes
     wait: yes
-    values: "{{ lookup('file', 'jenkins.yaml') | from_yaml }}"
+    values: "{{ lookup('file', 'values.yaml') | from_yaml }}"
   register: deployed_chart
 
 - name: check deployed_chart

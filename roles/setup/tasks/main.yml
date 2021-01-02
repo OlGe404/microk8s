@@ -206,7 +206,7 @@
         chart_version: ~v1.1
         update_repo_cache: yes
         wait: yes
-        values: "{{ lookup('file', 'cert-manager/cert-manager.yaml') | from_yaml }}"
+        values: "{{ lookup('file', 'cert-manager/values.yaml') | from_yaml }}"
       register: deployed_chart
 
     - name: deploy secret for ca-issuer
