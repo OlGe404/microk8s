@@ -40,7 +40,7 @@ ansible-playbook microk8s.yaml \
 ```
 
 ### Extended Usage
-If you do not use Ubuntu, but want to use the playbook to configure your Microk8s setup, install Microk8s on your machine and use the roles and/or tasks separately:
+If you do not use Ubuntu, but want to use the playbook to configure your Microk8s setup, install Microk8s on your machine and use the individual roles/tasks separately:
 
 ```bash
 ansible-playbook microk8s.yaml \
