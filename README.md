@@ -10,6 +10,8 @@ ansible-playbook microk8s.yaml \
 
 # TOC
 * [Goal of this Repo](#Goals-of-this-Repo)
+* [Usage](#Usage)
+  * [Extended Usage](#Extended-Usage)
 * [Enabled add-ons](#Enabled-add-ons)
 * [Additional configuration](#Additional-configuration)
 * [Ingress Hosts](#Ingress-Hosts)
@@ -20,9 +22,27 @@ This repo is meant to be used for the installation and setup of a local one-node
 
 The installation and setup is done via ansible to ensure a deterministic state on multiple install and setup runs. It uses Microk8s (v1.19) and its add-ons to bootstrap a local kubernetes environment in an opinionated way. Check out [Microk8s](https://microk8s.io) to learn more about the idea behind it and its features.
 
-**Disclaimer:** The files in this repo are work-in-progress and not tested on anything but my local setup (20.10 (Groovy Gorilla)). If you do not use Ubuntu, but want to use the playbook to configure your Microk8s setup, install Microk8s on your machine and use the roles and/or tasks separately:
+**Disclaimer:** The files in this repo are work-in-progress and not tested on anything but my local setup (20.10 (Groovy Gorilla)).
 
-```yaml
+## Usage
+The playbook depends on ansible-galaxy collections to create the local pki via openssl, to deploy kubernetes manifests and helm charts. 
+
+To install the ansible-galaxy collections on your machine, run:
+
+```bash
+ansible-galaxy collection install -r requirements.yaml
+```
+
+To use the playbook afterwards, run: 
+```bash
+ansible-playbook microk8s.yaml \
+  --extra-vars ansible_sudo_pass="<your sudo password>"
+```
+
+### Extended Usage
+If you do not use Ubuntu, but want to use the playbook to configure your Microk8s setup, install Microk8s on your machine and use the roles and/or tasks separately:
+
+```bash
 ansible-playbook microk8s.yaml \
   --extra-vars ansible_sudo_pass="<your sudo password>" \
   --tags "jenkins" \
