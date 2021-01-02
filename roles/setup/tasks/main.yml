@@ -13,7 +13,17 @@
         name: openshift
         extra_args: --user
 
+    - name: install helm
+      become_method: sudo
+      become: true
+      snap:
+        name: helm
+        state: present
+        classic: yes
+
     - name: libnss3-tools for certutil
+      become_method: sudo
+      become: true
       apt:
         name: libnss3-tools
         state: present

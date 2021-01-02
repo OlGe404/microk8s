@@ -1,14 +1,4 @@
 ---
-- name: install helm
-  block:
-    - name: helm
-      become_method: sudo
-      become: true
-      snap:
-        name: helm
-        state: present
-        classic: yes
-
 - name: add codecentric helm repo
   community.kubernetes.helm_repository:
     name: codecentric
