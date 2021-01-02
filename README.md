@@ -11,8 +11,8 @@ ansible-playbook microk8s.yaml \
 # TOC
 * [Goals for this Repo](#Goals-for-this-Repo)
 * [Enabled add-ons](#Enabled-add-ons)
-* [Additional configuration](##Additional-configuration)
-* [Ingress Hosts](##Ingress-Hosts)
+* [Additional configuration](#Additional-configuration)
+* [Ingress Hosts](#Ingress-Hosts)
 
 # Goals for this Repo
 This repo is meant to be used for the installation and setup of a local kubernetes environment for development and test purposes.
