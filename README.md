@@ -22,7 +22,7 @@ This repo is meant to be used for the installation and setup of a local one-node
 
 The installation and setup is done via ansible to ensure a deterministic state on multiple install and setup runs. It uses Microk8s (v1.19) and its add-ons to bootstrap a local kubernetes environment in an opinionated way. Check out [Microk8s](https://microk8s.io) to learn more about the idea behind it and its features.
 
-**Disclaimer:** The files in this repo are work-in-progress and not tested on anything but my local setup (20.10 (Groovy Gorilla)).
+**Disclaimer:** The files in this repo are work-in-progress and not tested on anything but my local setup with Ubuntu 20.10 (Groovy Gorilla).
 
 ## Usage
 The playbook depends on ansible-galaxy collections to create the local pki via openssl, to deploy kubernetes manifests and helm charts. 
