@@ -15,3 +15,7 @@ kubernetes_dashboard:
 
 cert_manager:
   namespace: cert-manager
+
+grafana:
+  username: admin
+  password: admin
