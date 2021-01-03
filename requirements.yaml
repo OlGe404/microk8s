@@ -2,3 +2,4 @@
 collections:
 - community.crypto
 - community.kubernetes
+- community.grafana
