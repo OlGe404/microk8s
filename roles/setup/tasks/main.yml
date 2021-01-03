@@ -194,3 +194,45 @@
     state: present
     src: "{{ item }}"
   loop: "{{ query('fileglob', 'files/ing-*.yaml') }}"
+
+- name: deploy helm chart and dashboard for elasticsearch monitoring
+  block:
+    - name: add prometheus-community helm repo
+      community.kubernetes.helm_repository:
+        name: prometheus-community
+        repo_url: "https://prometheus-community.github.io/helm-charts"
+
+    - name: deploy prometheus-elasticsearch-exporter
+      community.kubernetes.helm:
+        name: prometheus-elasticsearch-exporter
+        namespace: kube-system
+        chart_ref: prometheus-community/prometheus-elasticsearch-exporter
+        chart_version: ~4.0
+        update_repo_cache: yes
+        wait: yes
+        values: "{{ lookup('file', 'prometheus-elasticsearch-exporter/values.yaml') | from_yaml }}"
+
+    - name: set default prometheus datasource
+      community.grafana.grafana_datasource:
+        grafana_url: https://grafana.microk8s.local
+        grafana_user: "{{ grafana.username }}"
+        grafana_password: "{{ grafana.password }}"
+        name: prometheus
+        ds_type: prometheus
+        ds_url: http://prometheus-k8s.monitoring.svc:9090
+        is_default: true
+
+    - name: upload grafana dashboard for elasticsearch
+      uri:
+        url: "https://grafana.microk8s.local/api/dashboards/db"
+        user: "{{ grafana.username }}"
+        password: "{{ grafana.password }}"
+        force_basic_auth: true
+        method: POST
+        body_format: json
+        body: >
+          {
+            "dashboard": {{ lookup("file", "prometheus-elasticsearch-exporter/elasticsearch-dashboard.json") }},
+            "message": "Uploaded by Ansible during Microk8s setup",
+            "overwrite": true
+          }
