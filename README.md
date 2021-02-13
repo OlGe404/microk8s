@@ -17,6 +17,7 @@ ansible-playbook microk8s.yaml \
 * [Additional configuration](#Additional-configuration)
 * [Ingress Hosts](#Ingress-Hosts)
   * [Additional Ingress Hosts](#Additional-Ingress-Hosts)
+* [Uninstall](#Uninstall)
 
 # Goal of this Repo
 This repo is meant to be used for the installation and setup of a local one-node kubernetes environment for development and test purposes.
@@ -104,3 +105,12 @@ After the installation and setup is done, the following services are available:
 The certificate for the tls communication will be generated for `*.microk8s.local` domains from the cert-manager setup, so it can be used for any additional services you want to deploy into your Microk8s setup. 
 
 Make sure your ingress manifests use the cert-manager annotation to automatically create a valid tls-secret for your domain. Check out the [files/ing-*.yaml](roles/setup/files) manifests from the setup role or see the [cert-manager docs](https://cert-manager.io/docs/usage/ingress/) for more details.
+
+## Uninstall
+To uninstall microk8s, remove your user from the microk8s group and delete the microk8s group, execute
+
+```bash
+./uninstall.sh
+```
+
+from the root of this repository.
