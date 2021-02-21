@@ -65,4 +65,4 @@
         executable: /bin/bash
 
     - debug:
-        msg: "In order to use microk8s, you have to login to your shell again. Run 'su $(whoami)' to do so."
+        msg: "In order to use microk8s, you have to login to your shell again for the group changes to apply. Run 'su $(whoami)' to do so."
