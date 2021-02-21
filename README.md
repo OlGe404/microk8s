@@ -4,20 +4,31 @@ ansible-galaxy collection install -r requirements.yaml
 ```
 
 ```bash
-ansible-playbook microk8s.yaml \
+ansible-playbook install-microk8s.yaml \
+  --extra-vars ansible_sudo_pass="<your sudo password>"
+```
+
+```bash
+su - $(whoami)
+```
+
+```bash
+ansible-playbook setup-microk8s.yaml \
   --extra-vars ansible_sudo_pass="<your sudo password>"
 ```
 
 # TOC
-* [Goal of this Repo](#Goals-of-this-Repo)
-* [Usage](#Usage)
-  * [Debugging](#Debugging)
-  * [Extended Usage](#Extended-Usage)
-* [Enabled add-ons](#Enabled-add-ons)
-* [Additional configuration](#Additional-configuration)
-* [Ingress Hosts](#Ingress-Hosts)
-  * [Additional Ingress Hosts](#Additional-Ingress-Hosts)
-* [Uninstall](#Uninstall)
+- [TL;DR](#tldr)
+- [TOC](#toc)
+- [Goal of this Repo](#goal-of-this-repo)
+  - [Usage](#usage)
+    - [Debugging](#debugging)
+    - [Extended Usage](#extended-usage)
+  - [Enabled add-ons](#enabled-add-ons)
+  - [Additional configuration](#additional-configuration)
+  - [Ingress Hosts](#ingress-hosts)
+    - [Additional Ingress Hosts](#additional-ingress-hosts)
+  - [Uninstall](#uninstall)
 
 # Goal of this Repo
 This repo is meant to be used for the installation and setup of a local one-node kubernetes environment for development and test purposes.
@@ -35,9 +46,19 @@ To install the ansible-galaxy collections on your machine, run:
 ansible-galaxy collection install -r requirements.yaml
 ```
 
-To use the playbook afterwards, run: 
+To install microk8s and start, run:
 ```bash
-ansible-playbook microk8s.yaml \
+ansible-playbook install-microk8s.yaml \
+  --extra-vars ansible_sudo_pass="<your sudo password>"
+```
+
+```bash
+su - $(whoami)
+```
+
+To setup the microk8s plugins, certificates, routes, monitoring and a jenkins-server, run:
+```bash
+ansible-playbook setup-microk8s.yaml \
   --extra-vars ansible_sudo_pass="<your sudo password>"
 ```
 
