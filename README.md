@@ -51,9 +51,16 @@ To install microk8s and start, run:
 ansible-playbook install-microk8s.yaml \
   --extra-vars ansible_sudo_pass="<your sudo password>"
 ```
+and:
 
 ```bash
 su - $(whoami)
+```
+
+After the installation is done and you logged in again, query the Microk8s API via:
+
+```bash
+m8sk get pods --all-namespaces
 ```
 
 To setup the microk8s plugins, certificates, routes, monitoring and a jenkins-server, run:
