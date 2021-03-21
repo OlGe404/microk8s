@@ -24,6 +24,7 @@ ansible-playbook setup-microk8s.yaml \
   - [Usage](#usage)
     - [Aliases](#aliases)
     - [Debugging](#debugging)
+    - [Known Issues](#known-issues)
     - [Extended Usage](#extended-usage)
   - [Enabled add-ons](#enabled-add-ons)
   - [Additional configuration](#additional-configuration)
@@ -90,6 +91,28 @@ ansible-playbook microk8s.yaml \
   -vv
 ```
 to enable a more verbose output for the playbook run.
+
+### Known Issues
+After finishing the installation, the calico-node pods in the kube-system namespace can be stuck in a CrashLoopBackOff failing to autodiscover the ip-range to create their vxlan adapters in. You can fix the autodiscover method manually after installing Microk8s with the install-microk8s.yaml playbook:
+
+1. Check your available network interfaces:
+```bash
+ip a
+```
+
+2. Set the interface to use for the calico-node DaemonSet: 
+```bash
+m8sk set env ds/calico-node IP_AUTODETECTION_METHOD="interface=<interfaceName>" --namespace kube-system
+```
+
+3. Restart all pods in the kube-system namespce:
+```bash
+m8sk delete pods --all --namespace kube-system
+```
+
+For more information, checkout:
+* https://github.com/projectcalico/calico/issues/3094
+* https://docs.projectcalico.org/reference/node/configuration#ip-autodetection-methods
 
 ### Extended Usage
 If you do not use Ubuntu, but want to use the playbook to configure your Microk8s setup, install Microk8s on your machine and use the individual roles/tasks separately:
