@@ -4,7 +4,7 @@
   vars:
     ansible_python_interpreter: auto
     microk8s:
-      version: 1.19
+      version: latest/stable
   tasks:
     - name: install microk8s via snap
       become_method: sudo
@@ -38,6 +38,7 @@
             block: |-
               alias m8s='microk8s'
               alias m8sk='microk8s kubectl'
+              alias m8sksys='microk8s kubectl config set-context --current --namespace kube-system'
 
     - name: generate the ~/.kube/microk8s_config file
       become_method: sudo
