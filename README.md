@@ -22,6 +22,7 @@ ansible-playbook setup-microk8s.yaml \
 - [TOC](#toc)
 - [Goal of this Repo](#goal-of-this-repo)
   - [Usage](#usage)
+    - [Aliases](#aliases)
     - [Debugging](#debugging)
     - [Extended Usage](#extended-usage)
   - [Enabled add-ons](#enabled-add-ons)
@@ -67,6 +68,18 @@ To setup the microk8s plugins, certificates, routes, monitoring and a jenkins-se
 ```bash
 ansible-playbook setup-microk8s.yaml \
   --extra-vars ansible_sudo_pass="<your sudo password>"
+```
+
+### Aliases
+The Playbook appends aliases to your $HOME/.bash_aliases file, to ease the usage of the `microk8s kubectl` client that is used to interact with the Microk8s API.
+
+The following aliases are created:
+```
+m8s=microk8s (for commands like m8s start/stop)
+
+m8sk=microk8s kubectl (for commands like m8sk get pods)
+
+m8sksys=microk8s kubectl config set-context --current --namespace kube-system (for easier troubleshooting of system components in kube-system namespace)
 ```
 
 ### Debugging
