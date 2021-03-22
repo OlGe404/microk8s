@@ -8,5 +8,5 @@
   roles:
     - role: setup
       tags: ['setup']
-    - role: jenkins
-      tags: ['jenkins']
+#    - role: jenkins'
+ #     tags: ['jenkins']

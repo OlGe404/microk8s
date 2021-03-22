@@ -1,0 +1,4 @@
+---
+- name: enable microk8s.add_ons
+  command: "microk8s enable {{ item }}"
+  with_items: "{{ microk8s.add_ons }}"
