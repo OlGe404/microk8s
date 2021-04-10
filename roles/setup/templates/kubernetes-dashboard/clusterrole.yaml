@@ -2,10 +2,12 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
+  name: kubernetes-dashboard
   labels:
     k8s-app: kubernetes-dashboard
-  name: kubernetes-dashboard
+{% if kubernetes_dashboard.skip_login is sameas false -%}
 rules:
   - apiGroups: ["metrics.k8s.io"]
     resources: ["pods", "nodes"]
     verbs: ["get", "list", "watch"]
+{% endif -%}

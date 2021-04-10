@@ -1,21 +1,14 @@
 ---
 microk8s:
   add_ons:
-    - rbac
     - dns
-    - helm3
     - ingress
-    - storage
-    - fluentd
-    - prometheus
+    - rbac
     - registry
 
 kubernetes_dashboard:
   namespace: kube-system
+  skip_login: true
 
 cert_manager:
   namespace: cert-manager
-
-grafana:
-  username: admin
-  password: admin

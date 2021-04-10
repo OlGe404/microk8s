@@ -29,6 +29,9 @@ spec:
             - --insecure-port=9090
             - --auto-generate-certificates=false
             - --enable-insecure-login=true
+            {% if kubernetes_dashboard.skip_login is sameas true -%}
+            - --enable-skip-login
+            {% endif -%}
             - --token-ttl=28800
             - --namespace={{ kubernetes_dashboard.namespace }}
           volumeMounts:
