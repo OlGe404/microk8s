@@ -1,18 +1,19 @@
-# dependencies.yaml
-# microk8s_addons.yaml
-# openssl.yaml
-# cert_manager.yaml
-# ingress.yaml
-# k8s_dashboard.yaml
-
 ---
 - name: include tasks for setup
-  include_tasks: "{{ item | array }}"
-  loop:
-    - dependencies.yaml
-    - microk8s_addons.yaml
-    - openssl.yaml
-    - cert_manager.yaml
-    - ingress.yaml
-    - k8s_dashboard.yaml
+  include_tasks: 
+    file: "{{ task.value }}"
+    apply:
+      tags: ["{{ task.key }}"]
+  tags: ["always"]
+  loop: "{{ tasks | dict2items }}"
+  loop_control:
+    loop_var: task
+  vars:
+    tasks:
+      dependencies: dependencies.yaml
+      microk8s_addons: microk8s_addons.yaml
+      openssl: openssl.yaml
+      cert_manager: cert_manager.yaml
+      ingress: ingress.yaml
+      k8s_dashboard: k8s_dashboard.yaml
     # - monitoring.yaml
