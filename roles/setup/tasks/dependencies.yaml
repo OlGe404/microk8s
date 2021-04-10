@@ -13,6 +13,14 @@
         name: openshift
         extra_args: --user
 
+    - name: install kubectl
+      become_method: sudo
+      become: true
+      snap:
+        name: kubectl
+        state: present
+        classic: yes
+
     - name: install helm
       become_method: sudo
       become: true
