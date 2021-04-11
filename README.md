@@ -93,7 +93,7 @@ ansible-playbook microk8s.yaml \
 to enable a more verbose output for the playbook run.
 
 ### Known Issues
-After finishing the installation, the calico-node pods in the kube-system namespace can be stuck in a CrashLoopBackOff failing to autodiscover the ip-range to create their vxlan adapters in. You can fix the autodiscover method manually after installing Microk8s with the install-microk8s.yaml playbook:
+After finishing the installation, the calico-node pods in the kube-system namespace can be stuck in a CrashLoopBackOff failing to autodiscover the ip-range to create their vxlan adapters in. You can fix the autodiscover method manually after installing Microk8s with the `install-microk8s.yaml` playbook:
 
 1. Check your available network interfaces:
 ```bash
@@ -122,6 +122,8 @@ ansible-playbook microk8s.yaml \
   --extra-vars ansible_sudo_pass="<your sudo password>" \
   --tags "cert-manager"
 ```
+
+**Note**: Some tasks cannot be run individually, because they rely on  outputs from other tasks. This will be fixed in the future.
 
 ## Enabled add-ons
 Microk8s comes with add-ons that can be enabled to bootstrap preconfigured deployments for components like logging, monitoring or a container-registry. The following add-ons will be enabled by the `setup-microk8s.yaml` playbook:
