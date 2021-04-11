@@ -9,6 +9,7 @@
   loop_control:
     loop_var: task
   vars:
+    # keep this order and only append tasks to this list
     tasks:
       dependencies: dependencies.yaml
       microk8s_addons: microk8s_addons.yaml
@@ -16,4 +17,4 @@
       cert_manager: cert_manager.yaml
       ingress: ingress.yaml
       k8s_dashboard: k8s_dashboard.yaml
-    # - monitoring.yaml
+      monitoring: monitoring.yaml
