@@ -106,11 +106,10 @@
   become: true
   blockinfile:
     path: /etc/hosts
-    marker: "# {mark} OF ANSIBLE MANAGED BLOCK FOR MICROK8S HOSTS"
+    marker: "# {mark} Created from Ansible during Microk8s setup"
     block: |
-      127.0.0.1       dashboard.microk8s.local
-      127.0.0.1       kibana.microk8s.local
-      127.0.0.1       grafana.microk8s.local
-      127.0.0.1       prometheus.microk8s.local
-      127.0.0.1       alertmanager.microk8s.local
-      127.0.0.1       jenkins.microk8s.local
+      127.0.0.1 dashboard.microk8s.local
+      127.0.0.1 kibana.microk8s.local
+      127.0.0.1 grafana.microk8s.local
+      127.0.0.1 prometheus.microk8s.local
+      127.0.0.1 alertmanager.microk8s.local
