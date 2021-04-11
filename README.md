@@ -65,7 +65,7 @@ After the installation is done and you logged in again, query the Microk8s API v
 m8sk get pods --all-namespaces
 ```
 
-To setup the microk8s plugins, pki, certificates routes and monitoring, run:
+To setup the microk8s plugins, pki, certificates, routes and monitoring, run:
 ```bash
 ansible-playbook setup-microk8s.yaml \
   --extra-vars ansible_sudo_pass="<your sudo password>"
