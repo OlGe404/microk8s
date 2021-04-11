@@ -160,11 +160,11 @@ After the installation and setup is done, the following services are available:
 * grafana: https://grafana.microk8s.local (login via default credentials admin:admin)
 
 ### Additional Ingress Hosts
-The certificate for the tls communication will be generated for `*.microk8s.local` domains from the cert-manager setup, so it can be used for any additional services you want to deploy into your Microk8s setup. 
+The pki certificate will be generated for `*.microk8s.local` domains, so it can be used for any additional services you want to deploy into your Microk8s setup. 
 
-Make sure your ingress manifests use the cert-manager annotation to automatically create a valid tls-secret for your domain. Check out the [files/ing-*.yaml](roles/setup/files) manifests from the setup role or see the [cert-manager docs](https://cert-manager.io/docs/usage/ingress/) for more details.
+Make sure your ingress manifests use the cert-manager annotation to automatically create a valid tls-secret for your domain. Check out the [files/ing-*.yaml](roles/setup/files) manifests and check out [cert-manager docs](https://cert-manager.io/docs/usage/ingress/) for more details.
 
-Also, don't forget to add your ingress-host to your local /etc/hosts file.
+Also, don't forget to add your ingress-host to your local `/etc/hosts` file.
 
 ## Uninstall
 To uninstall microk8s, remove your user from the microk8s group and delete the microk8s group, execute
