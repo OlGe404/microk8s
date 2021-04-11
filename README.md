@@ -149,7 +149,7 @@ In addition to enabling the listed Microk8s add-ons the playbook will edit, gene
   * add entries to the /etc/hosts file for `*.microk8s.local` ingress hosts
   * deploy ingress manifests for the installed services and add-ons
 * deploy the kubernetes-dashboard
-* setup ptometheus monitoring for cert-manager and elasticsearch with grafana dashboards and metrics exporters
+* setup prometheus monitoring for cert-manager and elasticsearch with grafana dashboards and metrics exporters
 
 ## Ingress Hosts
 After the installation and setup is done, the following services are available:
