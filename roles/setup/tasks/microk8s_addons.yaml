@@ -1,4 +1,4 @@
 ---
-- name: enable microk8s.add_ons
+- name: enable microk8s.add_ons (can take > 30 minutes)
   command: "microk8s enable {{ item }}"
   with_items: "{{ microk8s.add_ons }}"
