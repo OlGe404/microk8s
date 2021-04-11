@@ -27,3 +27,9 @@
         -o yaml --dry-run=client | microk8s kubectl apply -f -
       args:
         executable: /bin/bash
+
+    - name: deploy templates for ca-issuer and prometheus monitoring
+      community.kubernetes.k8s:
+        definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+        state: present
+      loop: "{{ query('fileglob', 'templates/cert-manager/*.yaml') }}"
