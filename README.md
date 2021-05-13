@@ -28,8 +28,6 @@ ansible-playbook setup-microk8s.yaml \
     - [Extended Usage](#extended-usage)
   - [Enabled add-ons](#enabled-add-ons)
   - [Additional configuration](#additional-configuration)
-  - [Ingress Hosts](#ingress-hosts)
-    - [Additional Ingress Hosts](#additional-ingress-hosts)
   - [Uninstall](#uninstall)
 
 # Goal of this Repo
@@ -142,29 +140,8 @@ In addition to enabling the listed Microk8s add-ons the playbook will edit, gene
 * add the current user to the microk8s group to interact with Microk8s as a non-root user
 * append aliases for common commands to the $HOME/.bash_aliases file
 * generate a $HOME/.kube/microk8s_config file to interact with the Kubernetes API
-* create a local openssl pki
-  * update local ca-store
-  * update mozilla firefoxes ca-store
-  * deploy a cert-manager setup to levearge a cluster-internal pki
-  * add entries to the /etc/hosts file for `*.microk8s.local` ingress hosts
-  * deploy ingress manifests for the installed services and add-ons
 * deploy the kubernetes-dashboard
-* setup prometheus monitoring for cert-manager and elasticsearch with grafana dashboards and metrics exporters
-
-## Ingress Hosts
-After the installation and setup is done, the following services are available:
-* kubernetes-dashboard: https://dashboard.microk8s.local
-* kibana: https://kibana.microk8s.local
-* prometheus: https://prometheus.microk8s.local
-* alertmanager: https://alertmanager.microk8s.local
-* grafana: https://grafana.microk8s.local (login via default credentials admin:admin)
-
-### Additional Ingress Hosts
-The pki certificate will be generated for `*.microk8s.local` domains, so it can be used for any additional services you want to deploy into your Microk8s setup. 
-
-Make sure your ingress manifests use the cert-manager annotation to automatically create a valid tls-secret for your domain. Check out the [files/ing-*.yaml](roles/setup/files) manifests and check out [cert-manager docs](https://cert-manager.io/docs/usage/ingress/) for more details.
-
-Also, don't forget to add your ingress-host to your local `/etc/hosts` file.
+* setup prometheus monitoring elasticsearch with grafana dashboards and metrics exporters
 
 ## Uninstall
 To uninstall microk8s, remove your user from the microk8s group and delete the microk8s group, execute
