@@ -12,9 +12,6 @@ kubernetes_dashboard:
   namespace: kube-system
   skip_login: true
 
-cert_manager:
-  namespace: cert-manager
-
 grafana:
   username: admin
   password: admin
