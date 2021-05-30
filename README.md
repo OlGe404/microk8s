@@ -11,7 +11,6 @@ ansible-playbook install-microk8s.yaml
     - [WebUI](#webui)
     - [Bash aliases](#bash-aliases)
     - [Known Issues](#known-issues)
-  - [Additional configuration](#additional-configuration)
   - [Uninstall](#uninstall)
 
 # Purpose
