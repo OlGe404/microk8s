@@ -4,8 +4,6 @@ ansible-playbook install-microk8s.yaml
 ```
 
 # TOC
-- [TL;DR](#tldr)
-- [TOC](#toc)
 - [Purpose](#purpose)
   - [Usage](#usage)
     - [WebUI](#webui)
