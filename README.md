@@ -63,7 +63,7 @@ The following aliases are created:
 ## Known Issues
 After the installation is done, the calico-node pods in the kube-system namespace can be stuck in a CrashLoopBackOff failing to autodiscover the ip-range to create their vxlan adapters in.
 
-Because I am using this installation mostly on my laptop where the calico-node pods always fail to autodiscover the correct network adapters, the default configuration for the `install` role applies a fix for it by default. If you don't have this problem with your calico-node pods or if the mechanism is not working for you, set `vxlan.fix` values to `false` in the `defaults/main.yaml` for the `install` role.
+Because I am using this installation mostly on my laptop where the calico-node pods always fail to autodiscover the correct network adapters, the default configuration for the `install` role applies a fix for it by default. If you don't have this problem with your calico-node pods or if the mechanism is not working for you, set `vxlan.fix` value to `false` in the `defaults/main.yaml` for the `install` role.
 
 
 For more information about this problem, checkout:
