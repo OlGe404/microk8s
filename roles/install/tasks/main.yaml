@@ -59,5 +59,14 @@
     executable: /bin/bash
   when: vxlan.fix == true
 
+- name: restart all kube-system pods after fixing the vxlan adapter
+  shell: >
+    microk8s kubectl delete pods 
+    --namespace kube-system 
+    --all
+  args:
+    executable: /bin/bash
+  when: vxlan.fix == true
+
 - debug:
     msg: "In order to use microk8s, you have to login to your shell again for the group changes to apply. Run 'su $(whoami)' to do so."
