@@ -21,7 +21,7 @@ The installation and setup is done with ansible to ensure a deterministic state 
 * generate a $HOME/.kube/microk8s_config file to interact with the Kubernetes API
 * deploy the k8s-dashboard as a WebUI for the kubernetes environment
 
-The default configuration will install Microk8s in its `latest/stable` version with the `rbac` and `dns` add-ons enabled. Check out [Microk8s](https://microk8s.io) to learn more about the idea behind it and the available features.
+The default configuration will install Microk8s in its `latest/stable` version with the `rbac`, `dns` and `storage` add-ons enabled. Check out [Microk8s](https://microk8s.io) to learn more about the idea behind it and the available features.
 
 **Hint:** If you want to install a specific version of Microk8s and install additional add-ons by default, you can overwrite the default parameters via CLI when calling the playbook or by altering the `defaults/main.yaml` file for the `install` and `add-ons` role.
 
