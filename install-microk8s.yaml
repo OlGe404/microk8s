@@ -12,4 +12,4 @@
     - role: add-ons
       tags: ["a", "ao", "add-ons"]
     - role: k8s-dashboard
-      tags: ["d", "dashboard", "k8s-dashboard"]
+      tags: ["d", "kd", "k8s-dashboard"]
