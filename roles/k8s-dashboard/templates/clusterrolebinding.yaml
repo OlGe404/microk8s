@@ -13,7 +13,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   {% if kubernetes_dashboard.skip_login is sameas true -%}
-  name: admin
+  name: cluster-admin
   {% else -%}
   name: k8s-dashboard
   {% endif -%}
