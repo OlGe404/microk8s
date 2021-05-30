@@ -9,7 +9,7 @@ ansible-playbook install-microk8s.yaml
 - [Purpose](#purpose)
   - [Usage](#usage)
     - [WebUI](#webui)
-    - [Aliases](#aliases)
+    - [Bash aliases](#bash-aliases)
     - [Known Issues](#known-issues)
   - [Additional configuration](#additional-configuration)
   - [Uninstall](#uninstall)
@@ -53,7 +53,7 @@ m8sk get pods --all-namespaces
 ### WebUI
 After the installation is done and the `k8s-dashboard` role was executed successfully, a WebUI will be available at `http://localhost:30001` in your Webbrowser.
 
-### Aliases
+### Bash aliases
 The Playbook appends aliases to your $HOME/.bash_aliases file to ease the usage of the `microk8s kubectl` client used to interact with the Kubernetes API.
 
 The following aliases are created:
