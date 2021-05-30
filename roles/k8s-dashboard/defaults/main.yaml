@@ -1,0 +1,4 @@
+---
+kubernetes_dashboard:
+  namespace: kube-system
+  skip_login: true

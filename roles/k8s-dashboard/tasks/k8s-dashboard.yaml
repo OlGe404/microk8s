@@ -1,0 +1,6 @@
+---
+- name: deploy kubernetes-dashboard
+  community.kubernetes.k8s:
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+    state: present
+  loop: "{{ query('fileglob', 'templates/*.yaml') }}"

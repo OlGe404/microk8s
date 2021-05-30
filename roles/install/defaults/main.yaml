@@ -1,0 +1,7 @@
+---
+microk8s:
+  version: latest/stable
+
+vxlan:
+  fix: true
+  interface: wlo1

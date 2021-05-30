@@ -1,0 +1,12 @@
+---
+- name: install dependencies
+  block:
+    - name: python-pip
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: openshift pip-module
+      pip:
+        name: openshift
+        extra_args: --user

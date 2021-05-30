@@ -1,69 +1,15 @@
 ---
 - name: install microk8s
   hosts: localhost
-  vars:
-    ansible_python_interpreter: auto
-    microk8s:
-      version: latest/stable
-  tasks:
-    - name: install microk8s via snap
-      become_method: sudo
-      become: true
-      snap:
-        name: microk8s
-        classic: yes
-        channel: "{{ microk8s.version }}"
-
-    - name: add the current user to the microk8s group
-      become_method: sudo
-      become: true
-      user:
-        name: "{{ lookup('env', 'USER') }}"
-        groups: ["microk8s"]
-        append: yes
-
-    - name: append aliases for common microk8s commands to the ~/.bash_aliases file
-      block:
-        - name: create ~/.bash_aliases if it doesn't exist
-          file:
-            path: "{{ lookup('env', 'HOME') }}/.bash_aliases"
-            state: touch
-            mode: 0644
-            owner: "{{ lookup('env', 'USER') }}"
-
-        - name: append microk8s aliases
-          blockinfile:
-            path: "{{ lookup('env', 'HOME') }}/.bash_aliases"
-            marker: "# {mark} ANSIBLE MANAGED BLOCK FOR MICROK8S"
-            block: |-
-              alias m8s='microk8s'
-              alias m8sk='microk8s kubectl'
-              alias m8sksys='microk8s kubectl config set-context --current --namespace kube-system'
-
-    - name: generate the ~/.kube/microk8s_config file
-      become_method: sudo
-      become: true
-      block:
-        - name: create microk8s_config dir
-          file:
-            dest: "{{ lookup('env', 'HOME') }}/.kube"
-            state: directory
-
-        - name: create file
-          shell: "microk8s config | tee {{ lookup('env', 'HOME') }}/.kube/microk8s_config"
-
-        - name: set owner
-          file:
-            path: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
-            owner: "{{ lookup('env', 'USER') }}"
-            mode: '0600'
-
-    - name: start microk8s
-      become_method: sudo
-      become: true
-      shell: /snap/bin/microk8s.start && /snap/bin/microk8s.status --wait-ready
-      args:
-        executable: /bin/bash
-
-    - debug:
-        msg: "In order to use microk8s, you have to login to your shell again for the group changes to apply. Run 'su $(whoami)' to do so."
+  vars_prompt:
+    - name: sudo_password
+      prompt: "Provide your sudo_password for the play to start"
+  environment:
+    K8S_AUTH_KUBECONFIG: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
+  roles:
+    - role: install
+      tags: ["i", "inst", "install"]
+    - role: add-ons
+      tags: ["a", "ao", "add-ons"]
+    - role: k8s-dashboard
+      tags: ["d", "dashboard", "k8s-dashboard"]
