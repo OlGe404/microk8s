@@ -16,17 +16,17 @@ ansible-playbook install-microk8s.yaml
   - [Additional configuration](#additional-configuration)
   - [Uninstall](#uninstall)
 
-# Goal of this Repo
+# Purpose
 This repo is meant to be used for the installation and setup of a local one-node kubernetes environment for development and test purposes.
 
-The installation and setup is done with ansible to ensure a deterministic state on multiple installs. The default installation is Microk8s in its `latest/stable` version with the `rbacs` and `dns` add-ons enabled. Check out [Microk8s](https://microk8s.io) to learn more about the idea behind it and its features.
+The installation and setup is done with ansible to ensure a deterministic state on multiple installs. The default installation runs Microk8s in its `latest/stable` version with the `rbacs` and `dns` add-ons enabled. Check out [Microk8s](https://microk8s.io) to learn more about the idea behind it and the available features.
 
-**Hint:** If you want to install a specific version of Microk8s and install additional add-ons by default, you can provide the parameters via the CLI or by altering the default vars for the `install` and `add-ons` role.
+**Hint:** If you want to install a specific version of Microk8s and install additional add-ons by default, you can overwrite the default parameters via CLI when calling the playbook or by altering the `defaults/main.yaml` file for the `install` and `add-ons` role.
 
-**Disclaimer:** The files in this repo are work-in-progress and not tested on anything but my local setup with Ubuntu 20.04.2 LTS (Focal Fossa).
+**Disclaimer:** The files in this repo are work-in-progress and not tested on anything but my laptop with Ubuntu 20.04.2 LTS (Focal Fossa). It should be fine to run on other devices too, but if you encounter any problems check the [Known Issues](#known-issues).
 
 ## Usage
-The playbook depends on a ansible-galaxy collection to deploy kubernetes manifests for the K8s-Dashboard as a WebUI. 
+The playbook depends on a ansible-galaxy collection to deploy kubernetes manifests for the k8s-Dashboard as a WebUI. 
 
 To install the ansible-galaxy collection on your machine, run:
 
@@ -34,12 +34,12 @@ To install the ansible-galaxy collection on your machine, run:
 ansible-galaxy collection install -r requirements.yaml
 ```
 
-To install microk8s and start, run:
+To install microk8s, run:
 ```bash
 ansible-playbook install-microk8s.yaml
 ```
 
-After the installation is done, you should reboot your machine. Afterwards you can query the Microk8s API via:
+When the installation is done, reboot your machine. Afterwards you can query the Microk8s API via:
 
 ```bash
 m8sk get pods --all-namespaces
@@ -52,16 +52,14 @@ After the installation is done and the `k8s-dashboard` role was executed success
 The Playbook appends aliases to your $HOME/.bash_aliases file to ease the usage of the `microk8s kubectl` client used to interact with the Kubernetes API.
 
 The following aliases are created:
-```
-m8s=microk8s (for commands like "m8s start/stop")
-
-m8sk=microk8s kubectl (for commands like "m8sk get pods")
-
-m8sksys=microk8s kubectl config set-context --current --namespace kube-system (for easier troubleshooting of system components in kube-system namespace)
-```
+| Alias	| Command | Notes |
+|---	|---	|---	|
+| m8s | microk8s | For commands, e.g. `m8s start/stop` |
+| m8sk | microk8s kubectl | To query the k8s API, e.g. `m8sk get pods` |
+| m8sksys | microk8s kubectl config set-context --current --namespace kube-system | For easier troubleshooting of system components located in the kube-system namespace |
 
 ### Known Issues
-After the installation is done, the calico-node pods in the kube-system namespace can be stuck in a CrashLoopBackOff failing to autodiscover the ip-range to create their vxlan adapters in. In my experience, this can happen if you have a wifi module installed in your device (e. g. on a Laptop).
+After the installation is done, the calico-node pods in the kube-system namespace can be stuck in a CrashLoopBackOff failing to autodiscover the ip-range to create their vxlan adapters in. In my experience, this can happen if you have a wifi module installed in your device (e.g. on a Laptop).
 
 Because I am using this installation mostly on my laptop where the calico-node pods always fail to autodiscover the correct network adapters, the default configuration for the `install` role always tries to fix it automatically. If you do **not** have problems with your calico-node pods or if the default mechanism is not working for you, alter the default variables for the `install` role and set `vxlan.fix` values to `false`.
 
