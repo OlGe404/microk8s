@@ -17,7 +17,14 @@ ansible-playbook install-microk8s.yaml
 # Purpose
 This repo is meant to be used for the installation and setup of a local one-node kubernetes environment for development and test purposes.
 
-The installation and setup is done with ansible to ensure a deterministic state on multiple installs. The default installation runs Microk8s in its `latest/stable` version with the `rbacs` and `dns` add-ons enabled. Check out [Microk8s](https://microk8s.io) to learn more about the idea behind it and the available features.
+The installation and setup is done with ansible to ensure a deterministic state on multiple installs. The playbook will edit, generate and deploy some files to ensure a comprehensive experience with the local kubernetes environment:
+
+* add the current user to the microk8s group to interact with Microk8s as a non-root user
+* append aliases for common commands to the $HOME/.bash_aliases file
+* generate a $HOME/.kube/microk8s_config file to interact with the Kubernetes API
+* deploy the kubernetes-dashboard
+
+The default configuration will install Microk8s in its `latest/stable` version with the `rbacs` and `dns` add-ons enabled. Check out [Microk8s](https://microk8s.io) to learn more about the idea behind it and the available features.
 
 **Hint:** If you want to install a specific version of Microk8s and install additional add-ons by default, you can overwrite the default parameters via CLI when calling the playbook or by altering the `defaults/main.yaml` file for the `install` and `add-ons` role.
 
@@ -65,14 +72,6 @@ Because I am using this installation mostly on my laptop where the calico-node p
 For more information about this problem, checkout:
 * https://github.com/projectcalico/calico/issues/3094
 * https://docs.projectcalico.org/reference/node/configuration#ip-autodetection-methods
-
-## Additional configuration
-In addition to enabling the `rbacs` and `dns` Microk8s add-ons the playbook will edit, generate and deploy some files to ensure a comprehensive experience with the local kubernetes environment:
-
-* add the current user to the microk8s group to interact with Microk8s as a non-root user
-* append aliases for common commands to the $HOME/.bash_aliases file
-* generate a $HOME/.kube/microk8s_config file to interact with the Kubernetes API
-* deploy the kubernetes-dashboard
 
 ## Uninstall
 To uninstall microk8s, remove your user from the microk8s group and delete the microk8s group, execute
