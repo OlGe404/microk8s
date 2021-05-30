@@ -6,13 +6,11 @@ ansible-playbook install-microk8s.yaml
 # TOC
 - [TL;DR](#tldr)
 - [TOC](#toc)
-- [Goal of this Repo](#goal-of-this-repo)
+- [Purpose](#purpose)
   - [Usage](#usage)
+    - [WebUI](#webui)
     - [Aliases](#aliases)
-    - [Debugging](#debugging)
     - [Known Issues](#known-issues)
-    - [Extended Usage](#extended-usage)
-  - [Enabled add-ons](#enabled-add-ons)
   - [Additional configuration](#additional-configuration)
   - [Uninstall](#uninstall)
 
@@ -45,7 +43,7 @@ When the installation is done, reboot your machine. Afterwards you can query the
 m8sk get pods --all-namespaces
 ```
 
-## WebUI
+### WebUI
 After the installation is done and the `k8s-dashboard` role was executed successfully, a WebUI will be available at `http://localhost:30001` in your Webbrowser.
 
 ### Aliases
