@@ -1,6 +1,6 @@
 # TL;DR
 ```bash
-ansible-playbook install-microk8s.yaml
+ansible-playbook playbook.yaml
 ```
 
 # TOC
@@ -38,7 +38,7 @@ ansible-galaxy collection install -r requirements.yaml
 
 To install microk8s, run
 ```bash
-ansible-playbook install-microk8s.yaml
+ansible-playbook playbook.yaml
 ```
 
 When the installation is done, reboot your machine. Afterwards you can query the Microk8s API via
