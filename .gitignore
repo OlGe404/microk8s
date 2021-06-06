@@ -12,7 +12,7 @@ to-dos.md
 *.sln.docstates
 
 # python venv for molecule
-molecule/
+/molecule/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
