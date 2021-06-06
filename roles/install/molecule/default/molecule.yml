@@ -1,0 +1,75 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+  - name: impish
+    image: ubuntu:21.10
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /tmp
+    privileged: True
+
+  # - name: hirsute
+  #   image: ubuntu:21.04
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  #   tmpfs:
+  #     - /run
+  #     - /tmp
+  #   privileged: True
+
+  # - name: groovy
+  #   image: ubuntu:20.10
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  #   tmpfs:
+  #     - /run
+  #     - /tmp
+  #   privileged: True
+
+  # - name: focal
+  #   image: ubuntu:20.04
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  #   tmpfs:
+  #     - /run
+  #     - /tmp
+  #   privileged: True
+
+  # - name: bionic
+  #   image: ubuntu:18.04
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  #   tmpfs:
+  #     - /run
+  #     - /tmp
+  #   privileged: True
+
+  # - name: xenial
+  #   image: ubuntu:16.04
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  #   tmpfs:
+  #     - /run
+  #     - /tmp
+  #   privileged: True
+
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
+
+verifier:
+  name: ansible
+
+# lint: |
+#   set -e
+#   yamllint .
+#   ansible-lint .

@@ -1,0 +1,15 @@
+{% if item.registry is defined %}
+FROM {{ item.registry.url }}/{{ item.image }}
+{% else %}
+FROM {{ item.image }}
+{% endif %}
+
+USER root
+
+RUN apt-get update && \
+    export DEBIAN_FRONTEND=nointeractive && \
+    apt-get install -yq \
+    python \
+    snapd && \
+    apt-get autoclean && \
+    apt-get autoremove
