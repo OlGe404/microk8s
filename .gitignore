@@ -11,6 +11,9 @@ to-dos.md
 *.userosscache
 *.sln.docstates
 
+# python venv for molecule
+molecule/
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
