@@ -35,6 +35,7 @@
       file:
         dest: "{{ lookup('env', 'HOME') }}/.kube"
         state: directory
+        mode: '0644'
 
     - name: create file
       shell: "microk8s config | tee {{ lookup('env', 'HOME') }}/.kube/microk8s_config"
@@ -49,6 +50,8 @@
   shell: /snap/bin/microk8s.start && /snap/bin/microk8s.status --wait-ready
   args:
     executable: /bin/bash
+  register: start_microk8s
+  changed_when: "'already started' not in start_microk8s.stdout"
 
 - name: fix vxlan adapter
   shell: >
@@ -57,7 +60,7 @@
     --namespace kube-system
   args:
     executable: /bin/bash
-  when: vxlan.fix == true
+  when: vxlan.fix is true
 
 - name: restart all kube-system pods after fixing the vxlan adapter
   shell: >
@@ -66,7 +69,4 @@
     --all
   args:
     executable: /bin/bash
-  when: vxlan.fix == true
-
-- debug:
-    msg: "In order to use microk8s, you have to login to your shell again for the group changes to apply. Run 'su $(whoami)' to do so."
+  when: vxlan.fix is true
