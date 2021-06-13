@@ -3,62 +3,17 @@ dependency:
   name: galaxy
 
 driver:
-  name: docker
+  name: vagrant
+  provider:
+    name: virtualbox
 
 platforms:
-  - name: impish
-    image: ubuntu:21.10
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    tmpfs:
-      - /run
-      - /tmp
-    privileged: True
-
-  # - name: hirsute
-  #   image: ubuntu:21.04
-  #   volumes:
-  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  #   tmpfs:
-  #     - /run
-  #     - /tmp
-  #   privileged: True
-
-  # - name: groovy
-  #   image: ubuntu:20.10
-  #   volumes:
-  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  #   tmpfs:
-  #     - /run
-  #     - /tmp
-  #   privileged: True
-
-  # - name: focal
-  #   image: ubuntu:20.04
-  #   volumes:
-  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  #   tmpfs:
-  #     - /run
-  #     - /tmp
-  #   privileged: True
-
-  # - name: bionic
-  #   image: ubuntu:18.04
-  #   volumes:
-  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  #   tmpfs:
-  #     - /run
-  #     - /tmp
-  #   privileged: True
-
-  # - name: xenial
-  #   image: ubuntu:16.04
-  #   volumes:
-  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  #   tmpfs:
-  #     - /run
-  #     - /tmp
-  #   privileged: True
+  - name: vagrant-ubuntu
+    box: ubuntu/bionic64
+    memory: 512
+    cpus: 1
+    provider_raw_config_args:
+    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
 
 provisioner:
   name: ansible
@@ -69,7 +24,7 @@ provisioner:
 verifier:
   name: ansible
 
-# lint: |
-#   set -e
-#   yamllint .
-#   ansible-lint .
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .

@@ -6,7 +6,6 @@
 sudo apt-get update
 
 ### docker setup
-
 if docker --version > /dev/null 2>&1 ; then
     echo -e "\n======> Skipping Docker installation, because it already is installed. \n"
 else 
@@ -40,7 +39,7 @@ cat << EOF
 EOF
 ### docker setup
 
-### ansible and molecule setup
+### ansible, vagrant and molecule setup
 sudo apt-get install -y \
     python3-pip \
     python3-venv \
@@ -51,20 +50,32 @@ if ansible --version > /dev/null 2>&1 ; then
 else
     sudo apt-get install -y ansible
 fi
+
+if vagrant --version > /dev/null 2>&1 ; then
+    echo -e "\n======> Skipping Vagrant installation, because it already is installed. \n"
+else
+    sudo apt-get install -y vagrant
+fi
     
 ANSIBLE_VERSION=$(ansible --version | head -1 | awk '{print $2}')
 
 python3 -m venv molecule && source molecule/bin/activate
 python3 -m pip install wheel \
     ansible==$ANSIBLE_VERSION \
-    "molecule[vagrant,lint]"
+    python-vagrant \
+    testinfra \
+    molecule \
+    molecule-vagrant
 
 cat << EOF
+
+======> Vagrant location: $(which vagrant)
+======> Vagrant version: $(vagrant --version)
 
 ======> molecule location: $(which molecule)
 ======> molecule version: $(molecule --version)
 
 EOF
-### molecule setup
+### ansible, vagrant and molecule setup
 
 sudo apt-get autoclean && sudo apt-get autoremove
