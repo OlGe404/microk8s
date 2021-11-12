@@ -3,7 +3,7 @@
   become: true
   snap:
     name: microk8s
-    classic: yes
+    classic: true
     channel: "{{ version }}"
 
 - name: add the current user to the microk8s group
@@ -11,15 +11,15 @@
   user:
     name: "{{ lookup('env', 'USER') }}"
     groups: ["microk8s"]
-    append: yes
+    append: true
 
-- name: append aliases for common microk8s commands to the {{ lookup('env', 'HOME') }}/.bash_aliases file
+- name: set aliases for common commands
   block:
     - name: create {{ lookup('env', 'HOME') }}/.bash_aliases if it doesn't exist
       copy:
         content: ""
         dest: "{{ lookup('env', 'HOME') }}/.bash_aliases"
-        force: no
+        force: false
         mode: "0644"
         owner: "{{ lookup('env', 'USER') }}"
 
@@ -30,7 +30,9 @@
         block: |-
           alias m8s='microk8s'
           alias mk='microk8s kubectl'
-          alias mksys='microk8s kubectl config set-context --current --namespace kube-system'
+          alias mksys='microk8s kubectl config \
+            set-context --current \
+            --namespace kube-system'
 
 - name: generate {{ lookup('env', 'HOME') }}/.kube/microk8s_config
   block:
@@ -41,7 +43,9 @@
         mode: "0755"
 
     - name: create {{ lookup('env', 'HOME') }}/.kube/microk8s_config file
-      shell: "microk8s config | tee {{ lookup('env', 'HOME') }}/.kube/microk8s_config"
+      shell: >
+        microk8s config |
+        tee {{ lookup('env', 'HOME') }}/.kube/microk8s_config
       args:
         creates: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
 
@@ -58,14 +62,14 @@
 
 - name: fix vxlan adapter
   command: >
-    microk8s kubectl set env ds/calico-node 
-    IP_AUTODETECTION_METHOD="interface={{ vxlan.interface }}" 
+    microk8s kubectl set env ds/calico-node
+    IP_AUTODETECTION_METHOD="interface={{ vxlan.interface }}"
     --namespace kube-system
   when: vxlan.fix|bool
 
 - name: restart all kube-system pods after fixing the vxlan adapter
   command: >
-    microk8s kubectl delete pods 
-    --namespace kube-system 
+    microk8s kubectl delete pods
+    --namespace kube-system
     --all
   when: vxlan.fix|bool
