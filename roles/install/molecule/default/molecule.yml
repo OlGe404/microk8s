@@ -1,19 +1,49 @@
 ---
+# https://molecule.readthedocs.io/en/latest/configuration.html#scenario
+scenario:
+  test_sequence:
+    - lint
+    - create
+    - converge
+    - verify
+    - destroy
+  create_sequence:
+    - lint
+    - create
+  destroy_sequence:
+    - destroy
+
+# https://molecule.readthedocs.io/en/latest/configuration.html?highlight=requirements#molecule.dependency.ansible_galaxy.AnsibleGalaxy
+# https://github.com/ansible-community/molecule/issues/1509
 dependency:
   name: galaxy
+  options:
+    role-file: molecule/default/requirements.yaml
+    requirements-file: molecule/default/requirements.yaml
 
 driver:
   name: vagrant
   provider:
     name: virtualbox
 
+# ubuntu overview: https://app.vagrantup.com/ubuntu
 platforms:
-  - name: vagrant-ubuntu
-    box: ubuntu/bionic64
-    memory: 512
-    cpus: 1
-    provider_raw_config_args:
-    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
+  - name: impish-indri
+    box: ubuntu/impish64
+    memory: 2048
+    cpus: 2
+  - name: hirsute-hippo
+    box: ubuntu/hirsute64
+    memory: 2048
+    cpus: 2
+  - name: focal-fossa
+    box: ubuntu/focal64
+    memory: 2048
+    cpus: 2
+  # - name: bionic-beaver
+  #   box: ubuntu/bionic64
+  #   memory: 2048
+  #   cpus: 1
 
 provisioner:
   name: ansible
@@ -27,4 +57,4 @@ verifier:
 lint: |
   set -e
   yamllint .
-  ansible-lint .
+  ansible-lint
