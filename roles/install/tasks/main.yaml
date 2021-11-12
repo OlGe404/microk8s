@@ -1,72 +1,71 @@
 ---
 - name: install microk8s via snap
+  become: true
   snap:
     name: microk8s
     classic: yes
-    channel: "{{ microk8s.version }}"
+    channel: "{{ version }}"
 
 - name: add the current user to the microk8s group
+  become: true
   user:
     name: "{{ lookup('env', 'USER') }}"
     groups: ["microk8s"]
     append: yes
 
-- name: append aliases for common microk8s commands to the ~/.bash_aliases file
+- name: append aliases for common microk8s commands to the {{ lookup('env', 'HOME') }}/.bash_aliases file
   block:
-    - name: create ~/.bash_aliases if it doesn't exist
-      file:
-        path: "{{ lookup('env', 'HOME') }}/.bash_aliases"
-        state: touch
-        mode: 0644
+    - name: create {{ lookup('env', 'HOME') }}/.bash_aliases if it doesn't exist
+      copy:
+        content: ""
+        dest: "{{ lookup('env', 'HOME') }}/.bash_aliases"
+        force: no
+        mode: "0644"
         owner: "{{ lookup('env', 'USER') }}"
 
-    - name: append microk8s aliases
+    - name: append aliases
       blockinfile:
         path: "{{ lookup('env', 'HOME') }}/.bash_aliases"
-        marker: "# {mark} ANSIBLE MANAGED BLOCK FOR MICROK8S"
+        marker: "# {mark} ANSIBLE MICROK8S"
         block: |-
           alias m8s='microk8s'
-          alias m8sk='microk8s kubectl'
-          alias m8sksys='microk8s kubectl config set-context --current --namespace kube-system'
+          alias mk='microk8s kubectl'
+          alias mksys='microk8s kubectl config set-context --current --namespace kube-system'
 
-- name: generate the ~/.kube/microk8s_config file
+- name: generate {{ lookup('env', 'HOME') }}/.kube/microk8s_config
   block:
-    - name: create microk8s_config dir
+    - name: create {{ lookup('env', 'HOME') }}/.kube dir
       file:
         dest: "{{ lookup('env', 'HOME') }}/.kube"
         state: directory
-        mode: '0644'
+        mode: "0755"
 
-    - name: create file
+    - name: create {{ lookup('env', 'HOME') }}/.kube/microk8s_config file
       shell: "microk8s config | tee {{ lookup('env', 'HOME') }}/.kube/microk8s_config"
+      args:
+        creates: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
 
     - name: set owner
       file:
         path: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
         owner: "{{ lookup('env', 'USER') }}"
-        mode: '0600'
+        mode: "0600"
 
 - name: start microk8s
-  shell: /snap/bin/microk8s.start && /snap/bin/microk8s.status --wait-ready
-  args:
-    executable: /bin/bash
+  command: /snap/bin/microk8s.start
   register: start_microk8s
-  changed_when: "'already started' not in start_microk8s.stdout"
+  changed_when: "'Started.' not in start_microk8s.stdout"
 
 - name: fix vxlan adapter
-  shell: >
+  command: >
     microk8s kubectl set env ds/calico-node 
     IP_AUTODETECTION_METHOD="interface={{ vxlan.interface }}" 
     --namespace kube-system
-  args:
-    executable: /bin/bash
-  when: vxlan.fix is true
+  when: vxlan.fix|bool
 
 - name: restart all kube-system pods after fixing the vxlan adapter
-  shell: >
+  command: >
     microk8s kubectl delete pods 
     --namespace kube-system 
     --all
-  args:
-    executable: /bin/bash
-  when: vxlan.fix is true
+  when: vxlan.fix|bool
