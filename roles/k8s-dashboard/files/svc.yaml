@@ -1,11 +1,10 @@
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  labels:
-    k8s-app: k8s-dashboard
   name: k8s-dashboard
-  namespace: {{ kubernetes_dashboard.namespace }}
+  labels:
+    app: k8s-dashboard
 spec:
   type: NodePort
   ports:
@@ -13,4 +12,4 @@ spec:
       targetPort: http
       nodePort: 30001
   selector:
-    k8s-app: k8s-dashboard
+    app: k8s-dashboard

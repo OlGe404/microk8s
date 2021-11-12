@@ -1,23 +1,21 @@
 ---
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
-  labels:
-    k8s-app: dashboard-metrics-scraper
   name: dashboard-metrics-scraper
-  namespace: {{ kubernetes_dashboard.namespace }}
+  labels:
+    app: k8s-dashboard
 spec:
   replicas: 1
-  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
   selector:
     matchLabels:
-      k8s-app: dashboard-metrics-scraper
+      app: k8s-dashboard
   template:
     metadata:
       labels:
-        k8s-app: dashboard-metrics-scraper
-      annotations:
-        seccomp.security.alpha.kubernetes.io/pod: 'runtime/default'
+        app: k8s-dashboard
     spec:
       containers:
         - name: dashboard-metrics-scraper

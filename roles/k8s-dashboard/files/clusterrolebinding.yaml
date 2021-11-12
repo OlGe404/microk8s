@@ -4,16 +4,12 @@ kind: ClusterRoleBinding
 metadata:
   name: k8s-dashboard
   labels:
-    k8s-app: k8s-dashboard
+    app: k8s-dashboard
 subjects:
   - kind: ServiceAccount
     name: k8s-dashboard
-    namespace: {{ kubernetes_dashboard.namespace }}
+    namespace: kube-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  {% if kubernetes_dashboard.skip_login is sameas true -%}
   name: cluster-admin
-  {% else -%}
-  name: k8s-dashboard
-  {% endif -%}

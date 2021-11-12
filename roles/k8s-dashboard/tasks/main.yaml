@@ -1,15 +1,7 @@
 ---
-- name: include tasks for setup
-  include_tasks: 
-    file: "{{ task.value }}"
-    apply:
-      tags: ["{{ task.key }}"]
-  tags: ["always"]
-  loop: "{{ tasks | dict2items }}"
-  loop_control:
-    loop_var: task
-  vars:
-    # keep this order and only append tasks to this list
-    tasks:
-      dependencies: dependencies.yaml
-      k8s_dashboard: k8s-dashboard.yaml
+- name: Deploy k8s-dashboard
+  k8s:
+    state: present
+    namespace: kube-system
+    definition: "{{ lookup('file', '{{ item }}') | from_yaml }}"
+  loop: "{{ query('fileglob', 'files/*.yaml') }}"
