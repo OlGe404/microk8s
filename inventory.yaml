@@ -4,6 +4,4 @@ all:
     localhost:
       ansible_connection: "local"
       ansible_python_interpreter: "auto"
-      ansible_become: true
-      ansible_become_user: "root"
       ansible_sudo_pass: "{{ sudo_password }}"
