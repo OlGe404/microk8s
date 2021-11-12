@@ -49,11 +49,14 @@ fi
 python3 -m venv molecule && source molecule/bin/activate
 python3 -m pip install \
     wheel \
+    "pyyaml<6" \
     ansible==$ANSIBLE_VERSION \
     python-vagrant \
     pytest-testinfra \
     molecule \
-    molecule-vagrant
+    molecule-vagrant \
+    yamllint \
+    ansible-lint
 
 cat << EOF
 
