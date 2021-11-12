@@ -1,6 +1,5 @@
 ---
-microk8s:
-  version: latest/stable
+version: latest/stable
 
 vxlan:
   fix: true
