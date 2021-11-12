@@ -10,23 +10,9 @@ Requirements
 
 Install
 =======
-
-Please refer to the `Virtual environment`_ documentation for installation best
-practices. If not using a virtual environment, please consider passing the
-widely recommended `'--user' flag`_ when invoking ``pip``.
-
-.. _Virtual environment: https://virtualenv.pypa.io/en/latest/
-.. _'--user' flag: https://packaging.python.org/tutorials/installing-packages/#installing-to-the-user-site
-
+Just run:
 .. code-block:: bash
 
-    $ pip install 'molecule_vagrant'
+    $(git rev-parse --show-toplevel)/scripts/install-packages.sh
 
-Hint
-====
-
-Just run the script from the root folder of this repository. The scripts does the setup of the pytho-venv and all its dependencies for this role for you.
-
-.. code-block:: bash
-
-scripts/install-packages.sh
+The script will setup all tools and packages needed to run the molecule tests.
