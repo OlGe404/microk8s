@@ -75,9 +75,7 @@
   when: vxlan.fix|bool
 
 - name: enable microk8s add_ons
-  shell: "microk8s enable {{ item }}"
+  command: "microk8s enable {{ item }}"
+  register: microk8s_add_ons
+  changed_when: "'already enabled' not in microk8s_add_ons.stdout"
   with_items: "{{ add_ons }}"
-  retries: 3
-  delay: 5
-  register: result
-  failed_when: result.rc not in [0]
