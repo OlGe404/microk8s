@@ -13,7 +13,7 @@
     groups: ["microk8s"]
     append: true
 
-- name: set aliases for common commands
+- name: set aliases for common microk8s commands
   block:
     - name: create {{ lookup('env', 'HOME') }}/.bash_aliases if it doesn't exist
       copy:
@@ -23,7 +23,7 @@
         mode: "0644"
         owner: "{{ lookup('env', 'USER') }}"
 
-    - name: append aliases
+    - name: append aliases to {{ lookup('env', 'HOME') }}/.bash_aliases
       blockinfile:
         path: "{{ lookup('env', 'HOME') }}/.bash_aliases"
         marker: "# {mark} ANSIBLE MICROK8S"
@@ -67,18 +67,17 @@
     --namespace kube-system
   when: vxlan.fix|bool
 
-- name: restart all kube-system pods after fixing the vxlan adapter
+- name: restart kube-system pods after 'fix vxlan adapter'
   command: >
     microk8s kubectl delete pods
     --namespace kube-system
     --all
   when: vxlan.fix|bool
 
-- name: enable microk8s.add_ons (can take > 30 minutes)
+- name: enable microk8s add_ons
   shell: "microk8s enable {{ item }}"
   with_items: "{{ add_ons }}"
   retries: 3
   delay: 5
   register: result
   failed_when: result.rc not in [0]
-
