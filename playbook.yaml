@@ -7,9 +7,7 @@
   environment:
     K8S_AUTH_KUBECONFIG: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
   roles:
-    - role: install
-      tags: ["i", "inst", "install"]
-    - role: add-ons
-      tags: ["a", "ao", "add-ons"]
-    - role: k8s-dashboard
-      tags: ["d", "kd", "k8s-dashboard"]
+    - role: microk8s
+      tags: ["i", "install", "microk8s", "mk"]
+    - role: k8s_dashboard
+      tags: ["d", "dashboard", "k8s_dashboard"]

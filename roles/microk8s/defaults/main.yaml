@@ -1,6 +1,12 @@
 ---
 version: latest/stable
 
+add_ons:
+  - dns
+  - rbac
+  - storage
+  - ingress
+
 vxlan:
   fix: true
   interface: wlo1

@@ -1,6 +1,0 @@
----
-add_ons:
-  - dns
-  - rbac
-  - storage
-  - ingress

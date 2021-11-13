@@ -73,3 +73,12 @@
     --namespace kube-system
     --all
   when: vxlan.fix|bool
+
+- name: enable microk8s.add_ons (can take > 30 minutes)
+  shell: "microk8s enable {{ item }}"
+  with_items: "{{ add_ons }}"
+  retries: 3
+  delay: 5
+  register: result
+  failed_when: result.rc not in [0]
+
