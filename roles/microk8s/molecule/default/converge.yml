@@ -2,6 +2,6 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include install"
+    - name: "Include microk8s"
       include_role:
-        name: "install"
+        name: "microk8s"
