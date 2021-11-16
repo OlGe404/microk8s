@@ -8,49 +8,39 @@
 REPO_ROOT_DIR=$(git rev-parse --show-toplevel)
 
 sudo apt-get update
-
-### ansible, vagrant and molecule setup
 sudo apt-get install -y \
     python3-pip \
     python3-venv \
     libssl-dev \
     virtualbox
 
-if ansible --version > /dev/null 2>&1 ; then
-    echo -e "\n======> Skipping Ansible installation, because it already is installed. \n"
-else
-    sudo apt-get install -y ansible
-fi
+python3 -m pip install --quiet selinux
 
-ANSIBLE_VERSION=$(ansible --version | head -1 | awk '{print $2}')
-
-# with ansible 2.9.x, there is a bug where
-# newer version of kubernetes and openshift
-# won't work with the kubenetes.core module
-# so the working versions are fixated in that case
-if [[ $ANSIBLE_VERSION == *"2.9"* ]] ; then
-    python3 -m pip install \
-        "kubernetes==11.0.0" \
-        "openshift<0.12"
-else 
-    python3 -m pip install \
-        "kubernetes" \
-        "openshift"
-fi
+python3 -m pip install --user --quiet \
+    "pyyaml<6,>=5.1" \
+    ansible \
+    openshift \
+    jsonpatch
 
 ansible-galaxy collection install -r $REPO_ROOT_DIR/requirements.yaml
 
 if vagrant --version > /dev/null 2>&1 ; then
-    echo -e "\n======> Skipping Vagrant installation, because it already is installed. \n"
+    echo -e "\n======> Skipping Vagrant installation, because it is already installed. \n"
 else
-    sudo apt-get install -y vagrant
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+    sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    sudo apt-get update && sudo apt-get install vagrant
 fi
 
+ANSIBLE_VERSION=$(ansible --version | head -1 | awk '{print $3}' | tr -d ']')
+
 python3 -m venv molecule && source molecule/bin/activate
-python3 -m pip install \
+python3 -m pip install --quiet \
     wheel \
-    "pyyaml<6" \
-    ansible==$ANSIBLE_VERSION \
+    "pyyaml<6,>=5.1" \
+    ansible \
+    openshift \
+    jsonpatch \
     python-vagrant \
     pytest-testinfra \
     molecule \
@@ -60,8 +50,8 @@ python3 -m pip install \
 
 cat << EOF
 
-======> Vagrant location: $(which vagrant)
-======> Vagrant version: $(vagrant --version)
+======> pip packages: 
+$(pip freeze)
 
 ======> molecule location: $(which molecule)
 ======> molecule version: $(molecule --version)
