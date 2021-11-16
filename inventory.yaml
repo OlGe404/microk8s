@@ -3,5 +3,6 @@ all:
   hosts:
     localhost:
       ansible_connection: "local"
-      ansible_python_interpreter: "auto"
+      ansible_python_interpreter: "/usr/bin/python3"
+      ansible_become_method: sudo
       ansible_sudo_pass: "{{ sudo_password }}"
