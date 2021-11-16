@@ -1,6 +1,6 @@
 ---
 - name: Deploy k8s-dashboard
-  k8s:
+  kubernetes.core.k8s:
     state: present
     namespace: kube-system
     definition: "{{ lookup('file', '{{ item }}') | from_yaml }}"
