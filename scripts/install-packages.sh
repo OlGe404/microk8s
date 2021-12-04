@@ -22,7 +22,7 @@ python3 -m pip install --user --quiet \
     openshift \
     jsonpatch
 
-ansible-galaxy collection install -r $REPO_ROOT_DIR/requirements.yaml
+ansible-galaxy collection install -r $REPO_ROOT_DIR/ansible/requirements.yaml
 
 if vagrant --version > /dev/null 2>&1 ; then
     echo -e "\n======> Skipping Vagrant installation, because it is already installed. \n"

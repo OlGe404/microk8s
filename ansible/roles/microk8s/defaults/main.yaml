@@ -1,7 +1,6 @@
 ---
-version: latest/stable
-
-add_ons:
+microk8s_version: latest/stable
+microk8s_add_ons:
   - dns
   - rbac
   - storage

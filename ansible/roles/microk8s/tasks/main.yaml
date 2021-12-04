@@ -1,0 +1,73 @@
+---
+- name: install microk8s
+  become: true
+  snap:
+    name: microk8s
+    classic: true
+    channel: "{{ microk8s_version }}"
+
+- name: add {{ lookup('env', 'USER') }} to microk8s group
+  become: true
+  user:
+    name: "{{ lookup('env', 'USER') }}"
+    groups: ["microk8s"]
+    append: true
+
+- name: create microk8s config
+  block:
+    - name: create {{ lookup('env', 'HOME') }}/.kube dir
+      file:
+        dest: "{{ lookup('env', 'HOME') }}/.kube"
+        state: directory
+        mode: "0755"
+
+    - name: create {{ lookup('env', 'HOME') }}/.kube/microk8s_config file
+      shell: >
+        microk8s config |
+        tee {{ lookup('env', 'HOME') }}/.kube/microk8s_config
+      args:
+        creates: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
+
+    - name: set file permissions
+      file:
+        path: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
+        owner: "{{ lookup('env', 'USER') }}"
+        mode: "0600"
+
+- name: set aliases for common microk8s commands
+  become: true
+  block:
+    - name: create {{ lookup('env', 'HOME') }}/.bash_aliases
+      copy:
+        content: ""
+        dest: "{{ lookup('env', 'HOME') }}/.bash_aliases"
+        force: false
+        mode: "0644"
+        owner: "{{ lookup('env', 'USER') }}"
+
+    - name: append aliases to {{ lookup('env', 'HOME') }}/.bash_aliases
+      blockinfile:
+        path: "{{ lookup('env', 'HOME') }}/.bash_aliases"
+        marker: "# {mark} ansible managed microk8s aliases"
+        block: |-
+          alias m8s='microk8s'
+          alias mk='microk8s kubectl'
+          alias mksys='microk8s kubectl config \
+            set-context --current \
+            --namespace kube-system'
+
+- name: start microk8s
+  command: /snap/bin/microk8s.start
+  register: start_microk8s
+  changed_when: "'Started.' not in start_microk8s.stdout"
+
+- name: include when vxlan.fix=true
+  include_tasks:
+    file: fix-vxlan.yaml
+  when: vxlan.fix|bool
+
+- name: enable add-ons {{ microk8s_add_ons | join(', ') }}
+  become: true
+  command: "microk8s enable {{ item }}"
+  with_items: "{{ microk8s_add_ons }}"
+  changed_when: false

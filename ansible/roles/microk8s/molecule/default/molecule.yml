@@ -3,18 +3,22 @@
 scenario:
   test_sequence:
     - lint
+    - syntax
+    - destroy
     - create
     - converge
+    - idempotence
     - verify
     - destroy
   create_sequence:
-    - lint
     - create
   destroy_sequence:
     - destroy
   converge_sequence:
     - lint
+    - syntax
     - converge
+    - idempotence
 
 # https://molecule.readthedocs.io/en/latest/configuration.html?highlight=requirements#molecule.dependency.ansible_galaxy.AnsibleGalaxy
 # https://github.com/ansible-community/molecule/issues/1509
