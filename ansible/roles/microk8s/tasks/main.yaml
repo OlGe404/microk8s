@@ -52,6 +52,7 @@
         block: |-
           alias m8s='microk8s'
           alias mk='microk8s kubectl'
+          alias mkgp='microk8s kubectl get pods'
           alias mksys='microk8s kubectl config \
             set-context --current \
             --namespace kube-system'
