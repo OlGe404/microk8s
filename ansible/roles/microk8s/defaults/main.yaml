@@ -4,6 +4,7 @@ microk8s:
   add_ons:
     - dns
     - rbac
+    - storage
 
 vxlan:
   fix: true
