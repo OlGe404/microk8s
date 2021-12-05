@@ -14,15 +14,13 @@ sudo apt-get install -y \
     libssl-dev \
     virtualbox
 
-python3 -m pip install --quiet selinux
+python3 -m pip install --quiet selinux wheel
 
 python3 -m pip install --user --quiet \
     "pyyaml<6,>=5.1" \
     ansible \
     openshift \
     jsonpatch
-
-ansible-galaxy collection install -r $REPO_ROOT_DIR/ansible/requirements.yaml
 
 if vagrant --version > /dev/null 2>&1 ; then
     echo -e "\n======> Skipping Vagrant installation, because it is already installed. \n"
@@ -32,7 +30,11 @@ else
     sudo apt-get update && sudo apt-get install vagrant
 fi
 
+ansible-galaxy collection install -r $REPO_ROOT_DIR/ansible/requirements.yaml
+
 ANSIBLE_VERSION=$(ansible --version | head -1 | awk '{print $3}' | tr -d ']')
+
+cd $REPO_ROOT_DIR/ansible
 
 python3 -m venv molecule && source molecule/bin/activate
 python3 -m pip install --quiet \
