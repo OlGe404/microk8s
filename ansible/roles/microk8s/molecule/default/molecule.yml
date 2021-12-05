@@ -8,7 +8,6 @@ scenario:
     - create
     - converge
     - idempotence
-    - verify
     - destroy
   create_sequence:
     - lint
