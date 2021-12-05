@@ -51,11 +51,11 @@ mkgp --all-namespaces
 ## Testing
 TL;DR: The `microk8s` role is tested with Ubuntu 21.10, 21.04, 20.04 LTS, 18.04 LTS and 16.04 LTS. See the [molecule config file](ansible/roles/microk8s/molecule/default/molecule.yml) for more details.
 
-To ensure the Microk8s installation works on multiple Ubuntu versions, molecule is used. When running `scripts/molecule.sh`, molecule will bootstrap vragrant boxes with ubuntu 21.10, 21.04, 20.04 LTS, 18.04 LTS and 16.04 LTS to execute `microk8s` role against them.
+To ensure the Microk8s installation works on multiple Ubuntu versions, molecule is used. When running `scripts/molecule.sh`, molecule will bootstrap vagrant boxes with ubuntu 21.10, 21.04, 20.04 LTS, 18.04 LTS and 16.04 LTS to execute the `microk8s` role against them.
 
-"But why does your molecule setup not run any verifier?" - because ansible is a fail fast, push based system. If the `microk8s` role can be executed successfully and passes the idempotency test, the installation steps are tested and ready to use. There is no need to run additional verifiers, because ansible does the checks itself while applying them.
+"But why does your molecule setup not run any verifier?" - because ansible is a fail fast, push based system. If the `microk8s` role can be executed successfully and passes the idempotency test, the installation steps are sufficiently tested and ready to use. There is no need to run additional verifiers, because ansible does the checks itself while applying them.
 
-**Hint:** Run `scripts/install-packages.sh` before using molecule to ensure all packages are installed and the python virtual environment is setup and ready to use for the molecule test scenarios.
+**Hint:** Run `scripts/install-packages.sh` before using molecule to ensure all packages are installed and the python virtual environment is setup and ready to use for the molecule test scenario.
 
 ## WebUI
 After the Microk8s installation is done and the `k8s-dashboard` role was executed successfully, the WebUI will be available at `http://localhost:30001` in your Webbrowser.
