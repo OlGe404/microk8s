@@ -57,6 +57,10 @@
             set-context --current \
             --namespace kube-system'
 
+- name: start microk8s
+  command: /snap/bin/microk8s.start
+  changed_when: false
+
 - name: wait for microk8s to be ready
   command: /snap/bin/microk8s.status --wait-ready
   changed_when: false
