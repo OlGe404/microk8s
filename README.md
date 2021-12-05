@@ -27,7 +27,7 @@ The installation and setup is done with ansible to ensure a deterministic state 
 
 The default configuration will install Microk8s in its `latest/stable` version with the `rbac`, `dns` and `storage` add-ons enabled. Check out [Microk8s](https://microk8s.io) to learn more about the available features.
 
-**Hint:** If you want to install a specific version of Microk8s or install additional add-ons by default, you can overwrite the default parameters via CLI when calling the playbook or by altering the `ansible/roles/microk8s/defaults/main.yaml` file.
+**Hint:** If you want to install a specific version of Microk8s or install additional add-ons by default, you can overwrite the default parameters via CLI when calling the playbook or by altering the [defaults/main.yaml file](ansible/roles/microk8s/defaults/main.yaml).
 
 # Usage
 To install the necessary tools and packages, run:
@@ -49,7 +49,7 @@ mkgp --all-namespaces
 **Hint:** You may need to (re)login or atleast refresh the groups for your user to interact with the k8s API. Run `su $(whoami)` or `newgrp microk8s` to do so.
 
 ## Testing
-TL;DR: The `microk8s` role is tested with Ubuntu 21.10, 21.04, 20.04 LTS, 18.04 LTS and 16.04 LTS. See `ansible/roles/microk8s/molecule/molecule.yml` for more details.
+TL;DR: The `microk8s` role is tested with Ubuntu 21.10, 21.04, 20.04 LTS, 18.04 LTS and 16.04 LTS. See the [molecule config file](ansible/roles/microk8s/molecule/molecule.yml) for more details.
 
 To ensure the Microk8s installation works on multiple Ubuntu versions, molecule is used. When running `scripts/molecule.sh`, molecule will bootstrap vragrant boxes with ubuntu 21.10, 21.04, 20.04 LTS, 18.04 LTS and 16.04 LTS to execute `microk8s` role against them.
 
@@ -74,7 +74,7 @@ The following aliases are created:
 ## Known Issues
 After the installation is done, the calico-node pods in the kube-system namespace can fail to discover the ip-range to create their vxlan adapters in.
 
-Because I am using this installation on my laptop where the calico-node pods always fail, the default configuration for the `microk8s` role applies a fix for it by default. If you don't have this problem or if the mechanism is not working for you, set `vxlan.fix` to `false` in the `ansible/roles/microk8s/defaults/main.yaml` file.
+Because I am using this installation on my laptop where the calico-node pods always fail, the default configuration for the `microk8s` role applies a fix for it by default. If you don't have this problem or if the mechanism is not working for you, set `vxlan.fix` to `false` in the [defaults/main.yaml file](ansible/roles/microk8s/defaults/main.yaml).
 
 For more information about this problem, checkout:
 * https://github.com/projectcalico/calico/issues/3094
