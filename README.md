@@ -49,7 +49,7 @@ mkgp --all-namespaces
 **Hint:** You may need to (re)login or atleast refresh the groups for your user to interact with the k8s API. Run `su $(whoami)` or `newgrp microk8s` to do so.
 
 ## Testing
-TL;DR: The `microk8s` role is tested with Ubuntu 21.10, 21.04, 20.04 LTS, 18.04 LTS and 16.04 LTS. See the [molecule config file](ansible/roles/microk8s/molecule/molecule.yml) for more details.
+TL;DR: The `microk8s` role is tested with Ubuntu 21.10, 21.04, 20.04 LTS, 18.04 LTS and 16.04 LTS. See the [molecule config file](ansible/roles/microk8s/molecule/default/molecule.yml) for more details.
 
 To ensure the Microk8s installation works on multiple Ubuntu versions, molecule is used. When running `scripts/molecule.sh`, molecule will bootstrap vragrant boxes with ubuntu 21.10, 21.04, 20.04 LTS, 18.04 LTS and 16.04 LTS to execute `microk8s` role against them.
 
