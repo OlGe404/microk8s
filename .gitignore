@@ -14,6 +14,7 @@ tests.md
 
 # python venv for molecule
 /molecule/
+/ansible/molecule/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
