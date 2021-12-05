@@ -9,10 +9,6 @@
     --namespace kube-system
   register: calico_node_container_image
   changed_when: false
-  # retry bcs the microk8s api may not be available 
-  # when calico-node is crashing
-  retries: 15
-  delay: 3
 
 - name: patch ds/calico-node with IP_AUTODETECTION_METHOD
   kubernetes.core.k8s:

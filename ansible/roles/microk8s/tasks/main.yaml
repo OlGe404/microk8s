@@ -4,7 +4,7 @@
   snap:
     name: microk8s
     classic: true
-    channel: "{{ microk8s_version }}"
+    channel: "{{ microk8s.version }}"
 
 - name: add {{ lookup('env', 'USER') }} to microk8s group
   become: true
@@ -57,18 +57,17 @@
             set-context --current \
             --namespace kube-system'
 
-- name: start microk8s
-  command: /snap/bin/microk8s.start
-  register: start_microk8s
-  changed_when: "'Started.' not in start_microk8s.stdout"
+- name: wait for microk8s to be ready
+  command: /snap/bin/microk8s.status --wait-ready
+  changed_when: false
 
 - name: include when vxlan.fix=true
   include_tasks:
     file: fix-vxlan.yaml
   when: vxlan.fix|bool
 
-- name: enable add-ons {{ microk8s_add_ons | join(', ') }}
+- name: enable add-ons {{ microk8s.add_ons | join(', ') }}
   become: true
   command: "microk8s enable {{ item }}"
-  with_items: "{{ microk8s_add_ons }}"
+  with_items: "{{ microk8s.add_ons }}"
   changed_when: false
