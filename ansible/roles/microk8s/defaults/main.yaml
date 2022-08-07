@@ -4,8 +4,5 @@ microk8s:
   add_ons:
     - dns
     - rbac
-    - storage
-
-vxlan:
-  fix: true
-  interface: wlo1
+    - hostpath-storage
+    - host-access

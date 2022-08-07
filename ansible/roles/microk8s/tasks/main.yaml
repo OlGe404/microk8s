@@ -1,77 +1,68 @@
 ---
-- name: install microk8s
+- name: Install microk8s
   become: true
-  snap:
+  community.general.snap:
     name: microk8s
     classic: true
     channel: "{{ microk8s.version }}"
 
-- name: add {{ lookup('env', 'USER') }} to microk8s group
+- name: Add current user to microk8s group
   become: true
-  user:
+  ansible.builtin.user:
     name: "{{ lookup('env', 'USER') }}"
     groups: ["microk8s"]
     append: true
 
-- name: create microk8s config
-  block:
-    - name: create {{ lookup('env', 'HOME') }}/.kube dir
-      file:
-        dest: "{{ lookup('env', 'HOME') }}/.kube"
-        state: directory
-        mode: "0755"
-
-    - name: create {{ lookup('env', 'HOME') }}/.kube/microk8s_config file
-      shell: >
-        microk8s config |
-        tee {{ lookup('env', 'HOME') }}/.kube/microk8s_config
-      args:
-        creates: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
-
-    - name: set file permissions
-      file:
-        path: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
-        owner: "{{ lookup('env', 'USER') }}"
-        mode: "0600"
-
-- name: set aliases for common microk8s commands
+- name: Set aliases for microk8s commands
   become: true
   block:
-    - name: create {{ lookup('env', 'HOME') }}/.bash_aliases
-      copy:
+    - name: Ensure .bash_aliases exists
+      ansible.builtin.copy:
         content: ""
         dest: "{{ lookup('env', 'HOME') }}/.bash_aliases"
         force: false
         mode: "0644"
         owner: "{{ lookup('env', 'USER') }}"
 
-    - name: append aliases to {{ lookup('env', 'HOME') }}/.bash_aliases
-      blockinfile:
+    - name: Append aliases to .bash_aliases
+      ansible.builtin.blockinfile:
         path: "{{ lookup('env', 'HOME') }}/.bash_aliases"
         marker: "# {mark} ansible managed microk8s aliases"
         block: |-
           alias m8s='microk8s'
           alias mk='microk8s kubectl'
           alias mkgp='microk8s kubectl get pods'
-          alias mksys='microk8s kubectl config \
-            set-context --current \
-            --namespace kube-system'
 
-- name: start microk8s
-  command: /snap/bin/microk8s.start
-  changed_when: false
-
-- name: wait for microk8s to be ready
-  command: /snap/bin/microk8s.status --wait-ready
-  changed_when: false
-
-- name: include when vxlan.fix=true
-  include_tasks:
-    file: fix-vxlan.yaml
-  when: vxlan.fix|bool
-
-- name: enable add-ons {{ microk8s.add_ons | join(', ') }}
+- name: Create kubeconfig file for microk8s
   become: true
-  command: "microk8s enable {{ item }}"
+  ansible.builtin.shell: >
+    microk8s kubectl config view --raw > {{ lookup('env', 'HOME') }}/.kube/microk8s_config
+
+- name: Start microk8s
+  become: true
+  ansible.builtin.command: /snap/bin/microk8s.start
+
+- name: Wait for microk8s to be ready
+  become: true
+  ansible.builtin.command: /snap/bin/microk8s.status --wait-ready
+
+- name: Enable microk8s add-ons {{ microk8s.add_ons | join(', ') }}
+  become: true
+  ansible.builtin.command: "microk8s enable {{ item }}"
   with_items: "{{ microk8s.add_ons }}"
-  changed_when: false
+
+- name: Deploy kubernetes-dashboard
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
+    namespace: kube-system
+    template: "{{ query('fileglob', 'files/*.yaml') }}"
+
+- name: Wait for kubernetes-dashboard rollout
+  become: true
+  ansible.builtin.command: >
+    microk8s kubectl rollout status deploy/k8s-dashboard --namespace kube-system
+  register: kubernetes_dashboard_status
+  until: kubernetes_dashboard_status.rc == 0
+  retries: 30
+  delay: 10

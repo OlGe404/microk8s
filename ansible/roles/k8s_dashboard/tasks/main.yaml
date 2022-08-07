@@ -1,7 +1,0 @@
----
-- name: Deploy k8s-dashboard
-  kubernetes.core.k8s:
-    state: present
-    namespace: kube-system
-    definition: "{{ lookup('file', '{{ item }}') | from_yaml }}"
-  loop: "{{ query('fileglob', 'files/*.yaml') }}"

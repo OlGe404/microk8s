@@ -1,0 +1,23 @@
+---
+- name: Remove mircok8s and the required packages, caches and components
+  hosts: localhost
+  vars_prompt:
+    - name: sudo_password
+      prompt: "Provide your sudo password to start the play"
+
+  tasks:
+    - name: Remove microk8s snap package
+      become: true
+      community.general.snap:
+        state: absent
+        name: microk8s
+
+    - name: Remove current user from microk8s group
+      become: true
+      ansible.builtin.command: >
+        gpasswd --delete {{ lookup('env', 'USER') }} microk8s
+
+    - name: Remove microk8s_config file
+      ansible.builtin.file:
+        state: absent
+        path: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
