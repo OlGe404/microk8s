@@ -1,5 +1,5 @@
 # microk8s
-This repo can be used to setup a local k8s environment for development and test purposes based on microk8s.
+This repo can be used to setup a local k8s environment for development and test purposes based on microk8s. Checkout https://microk8s.io/ for more information.
 
 ## Install
 Run the following commands to start the installation:
