@@ -6,7 +6,7 @@ Run the following commands to start the installation:
   * <code>cd ansible && ./venv-setup.sh && source .venv/bin/activate</code>
   * Start the installation with <code>ansible-playbook playbook.yaml</code> and provide your sudo password when prompted
   * After the installation has finished, refresh your shell with <code>su $(whoami)</code>
-  * List all running pods by <code>mkgp --all-namespaces</code>
+  * List all running pods by <code>mkctl get pods --all-namespaces</code>
 
 After the microk8s installation is done, the kubernetes-dashboard UI will be available at <code>http://localhost:30001</code>.
 
@@ -16,8 +16,7 @@ The playbook appends aliases to your ~/.bash_aliases file to ease the usage of t
 | Alias	| Command                     | Notes                                                  |
 |-------|-----------------------------|--------------------------------------------------------|
 | m8s   | `microk8s`                  | For commands, e.g. `m8s start`                         |
-| mk    | `microk8s kubectl`          | To query the k8s API, e.g. `mk get services`           |
-| mkgp  | `microk8s kubectl get pods` | To query the k8s API for pods in the current namespace |
+| mkctl | `microk8s kubectl`          | To query the k8s API, e.g. `mkctl get services`        |
 
 
 ## Deinstall
