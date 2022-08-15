@@ -20,4 +20,4 @@
     - name: Remove microk8s_config file
       ansible.builtin.file:
         state: absent
-        path: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
+        path: "{{ lookup('env', 'HOME') }}/.kubeconfig"

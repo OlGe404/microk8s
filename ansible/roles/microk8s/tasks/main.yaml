@@ -13,7 +13,7 @@
     groups: ["microk8s"]
     append: true
 
-- name: Set aliases for microk8s commands
+- name: Set bash aliases for microk8s commands
   become: true
   block:
     - name: Ensure .bash_aliases exists
@@ -27,16 +27,24 @@
     - name: Append aliases to .bash_aliases
       ansible.builtin.blockinfile:
         path: "{{ lookup('env', 'HOME') }}/.bash_aliases"
-        marker: "# {mark} ansible managed microk8s aliases"
+        marker: "# {mark} ansible managed aliases for microk8s"
         block: |-
           alias m8s='microk8s'
-          alias mk='microk8s kubectl'
-          alias mkgp='microk8s kubectl get pods'
+          alias mkctl='microk8s kubectl'
 
-- name: Create kubeconfig file for microk8s
+- name: Generate kubeconfig output
   become: true
-  ansible.builtin.shell: >
-    microk8s kubectl config view --raw > {{ lookup('env', 'HOME') }}/.kube/microk8s_config
+  ansible.builtin.command: microk8s kubectl config view --raw
+  register: kubeconfig
+
+- name: Create kubeconfig file
+  ansible.builtin.blockinfile:
+    path: "{{ lookup('env', 'HOME') }}/.kubeconfig"
+    create: true
+    owner: "{{ lookup('env', 'USER') }}"
+    mode: "0600"
+    marker: "# {mark} ansible managed kubeconfig file for microk8s"
+    block: "{{ kubeconfig.stdout }}"
 
 - name: Start microk8s
   become: true
@@ -54,7 +62,7 @@
 - name: Deploy kubernetes-dashboard
   kubernetes.core.k8s:
     state: present
-    kubeconfig: "{{ lookup('env', 'HOME') }}/.kube/microk8s_config"
+    kubeconfig: "{{ lookup('env', 'HOME') }}/.kubeconfig"
     namespace: kube-system
     template: "{{ query('fileglob', 'files/*.yaml') }}"
 
