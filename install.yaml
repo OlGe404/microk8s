@@ -35,20 +35,16 @@
         append: true
         groups: microk8s
 
-    - name: Ensure $HOME/.bashrc exists
+    - name: Create /etc/profile.d/microk8s.sh to set alias and ENVs
       become: true
-      ansible.builtin.copy:
-        content: ""
-        dest: "{{ lookup('env', 'HOME') }}/.bashrc"
-        force: false
-        mode: "0644"
-        owner: "{{ lookup('env', 'USER') }}"
-
-    - name: Create aliases
       ansible.builtin.blockinfile:
-        path: "{{ lookup('env', 'HOME') }}/.bashrc"
-        marker: "# {mark} ansible managed by https://github.com/OlGe404/microk8s"
-        block: |-
+        path: /etc/profile.d/microk8s.sh
+        create: true
+        owner: "{{ lookup('env', 'USER') }}"
+        group: root
+        mode: "0755"
+        block: |
+          #!/bin/bash
           alias m8s='microk8s'
           alias mkctl='microk8s kubectl'
           export KUBECONFIG='{{ microk8s.kubeconfig }}'
@@ -94,7 +90,7 @@
         template: "{{ query('fileglob', '{{ playbook_dir }}/kubernetes-dashboard/*.yaml') }}"
         kubeconfig: "{{ microk8s.kubeconfig }}"
 
-    - name: Wait for kubernetes-dashboard rollout
+    - name: Wait for kubernetes-dashboard rollout to finish
       become: true
       ansible.builtin.command: microk8s kubectl rollout status deploy/k8s-dashboard --namespace kube-system
       register: dashboard_status
@@ -104,6 +100,6 @@
       delay: 10
 
     - ansible.builtin.debug:
-        msg: "You can now access the kubernetes-dashbaord UI at: http://localhost:30001"
+        msg: "You can now access the kubernetes-dashbaord at: http://localhost:30001"
       tags:
         - skip_ansible_lint

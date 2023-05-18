@@ -20,12 +20,17 @@
 
     - name: Remove current user from microk8s group
       become: true
-      ansible.builtin.command: >
-        gpasswd --delete {{ lookup('env', 'USER') }} microk8s
+      ansible.builtin.command: "gpasswd --delete {{ lookup('env', 'USER') }} microk8s"
       tags:
         - skip_ansible_lint
 
-    - name: Remove microk8s_config file
+    - name: Remove microk8s kubeconfig file
       ansible.builtin.file:
         state: absent
         path: "{{ lookup('env', 'HOME') }}/.kube/microk8s"
+
+    - name: Remove /etc/profile.d/microk8s.sh
+      become: true
+      ansible.builtin.file:
+        state: absent
+        path: /etc/profile.d/microk8s.sh
