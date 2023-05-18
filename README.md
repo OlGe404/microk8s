@@ -19,15 +19,18 @@ Run the following commands to start the installation:
 After the microk8s installation is done, the kubernetes-dashboard UI will be available at <code>http://localhost:30001</code>.
 
 ### Bash aliases
-The playbook appends aliases to your ~/.bash_aliases file to ease the usage of the `microk8s kubectl` client. The following aliases are created:
+The playbook appends aliases to your ~/.bashrc file to ease the usage of 
+`microk8s kubectl` and `microk8s` commands.
+
+The following aliases are created:
 
 | Alias | Command            | Notes                                           |
 | ----- | ------------------ | ----------------------------------------------- |
 | m8s   | `microk8s`         | For commands, e.g. `m8s start`                  |
 | mkctl | `microk8s kubectl` | To query the k8s API, e.g. `mkctl get services` |
 
-You can also use the regular oc/kubectl command, because the "KUBECONFIG" env for microk8s
-will be added to your $HOME/.bashrc file during the install.
+You can also use the regular oc/kubectl commands to interact with your cluster,
+because the "KUBECONFIG" env for microk8s will be added to your $HOME/.bashrc file.
 
 ## Deinstallation
 To deinstall the microk8s environment, run
