@@ -1,8 +1,0 @@
----
-microk8s:
-  version: latest/stable
-  add_ons:
-    - dns
-    - rbac
-    - hostpath-storage
-    - host-access

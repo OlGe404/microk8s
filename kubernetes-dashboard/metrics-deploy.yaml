@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: k8s-dashboard
+  name: dashboard-metrics-scraper
   labels:
     app: k8s-dashboard
 spec:
@@ -17,42 +17,41 @@ spec:
       labels:
         app: k8s-dashboard
     spec:
-      containers: 
-        - name: k8s-dashboard
-          image: kubernetesui/dashboard:v2.4.0
+      containers:
+        - name: dashboard-metrics-scraper
+          image: kubernetesui/metrics-scraper:v1.0.4
           imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
           ports:
-            - name: http
-              containerPort: 9090
+            - containerPort: 8000
               protocol: TCP
-          args:
-            - --insecure-port=9090
-            - --auto-generate-certificates=false
-            - --enable-insecure-login=true
-            - --enable-skip-login
-            - --token-ttl=28800
-            - --namespace=kube-system
-          volumeMounts:
-            - mountPath: /tmp
-              name: tmp-volume
           livenessProbe:
             httpGet:
               scheme: HTTP
               path: /
-              port: 9090
+              port: 8000
             initialDelaySeconds: 30
             timeoutSeconds: 30
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp-volume
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             runAsUser: 1001
             runAsGroup: 2001
-      volumes:
-        - name: tmp-volume
-          emptyDir: {}
       serviceAccountName: k8s-dashboard
       nodeSelector:
         "kubernetes.io/os": linux
       tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}

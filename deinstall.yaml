@@ -3,7 +3,13 @@
   hosts: localhost
   vars_prompt:
     - name: sudo_password
-      prompt: "Provide your sudo password to start the play"
+      prompt: "Provide your sudo password to start the deinstallation"
+
+  vars:
+    ansible_connection: local
+    ansible_python_interpreter: "/usr/bin/env python3"
+    ansible_become_method: sudo
+    ansible_sudo_pass: "{{ sudo_password }}"
 
   tasks:
     - name: Remove microk8s snap package
@@ -16,8 +22,10 @@
       become: true
       ansible.builtin.command: >
         gpasswd --delete {{ lookup('env', 'USER') }} microk8s
+      tags:
+        - skip_ansible_lint
 
     - name: Remove microk8s_config file
       ansible.builtin.file:
         state: absent
-        path: "{{ lookup('env', 'HOME') }}/.kubeconfig"
+        path: "{{ lookup('env', 'HOME') }}/.kube/microk8s"
