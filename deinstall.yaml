@@ -2,16 +2,25 @@
 - name: Remove mircok8s and the required packages, caches and components
   hosts: localhost
   vars_prompt:
-    - name: sudo_password
+    - name: sudo_pass
       prompt: "Provide your sudo password to start the deinstallation"
 
   vars:
     ansible_connection: local
     ansible_python_interpreter: "/usr/bin/env python3"
     ansible_become_method: sudo
-    ansible_sudo_pass: "{{ sudo_password }}"
+    ansible_sudo_pass: "{{ sudo_pass }}"
+
+    microk8s:
+      user: "{{ lookup('env', 'USER') }}"
+      kubeconfig: "{{ lookup('env', 'HOME') }}/.kube/microk8s"
 
   tasks:
+    - name: Stop microk8s
+      become: true
+      ansible.builtin.command: /snap/bin/microk8s stop
+      tags: skip_ansible_lint
+
     - name: Remove microk8s snap package
       become: true
       community.general.snap:
@@ -20,14 +29,13 @@
 
     - name: Remove current user from microk8s group
       become: true
-      ansible.builtin.command: "gpasswd --delete {{ lookup('env', 'USER') }} microk8s"
-      tags:
-        - skip_ansible_lint
+      ansible.builtin.command: "gpasswd --delete {{ microk8s.user }} microk8s"
+      tags: skip_ansible_lint
 
     - name: Remove microk8s kubeconfig file
       ansible.builtin.file:
         state: absent
-        path: "{{ lookup('env', 'HOME') }}/.kube/microk8s"
+        path: "{{ microk8s.kubeconfig }}"
 
     - name: Remove /etc/profile.d/microk8s.sh
       become: true

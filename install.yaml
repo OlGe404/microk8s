@@ -2,26 +2,26 @@
 - name: Install microk8s
   hosts: localhost
   vars_prompt:
-    - name: sudo_password
-      prompt: "Provide your sudo_password to start the installation"
+    - name: sudo_pass
+      prompt: "Provide your sudo password to start the installation"
 
   vars:
     ansible_connection: local
     ansible_python_interpreter: "/usr/bin/env python3"
     ansible_become_method: sudo
-    ansible_sudo_pass: "{{ sudo_password }}"
+    ansible_sudo_pass: "{{ sudo_pass }}"
 
     microk8s:
+      user: "{{ lookup('env', 'USER') }}"
       kubeconfig: "{{ lookup('env', 'HOME') }}/.kube/microk8s"
       version: latest/stable
       add_ons:
         - dns
         - rbac
         - hostpath-storage
-        - host-access
 
   tasks:
-    - name: Install microk8s
+    - name: Install microk8s snap package
       become: true
       community.general.snap:
         name: microk8s
@@ -31,7 +31,7 @@
     - name: Add current user to microk8s group
       become: true
       ansible.builtin.user:
-        name: "{{ lookup('env', 'USER') }}"
+        name: "{{ microk8s.user }}"
         append: true
         groups: microk8s
 
@@ -40,13 +40,13 @@
       ansible.builtin.blockinfile:
         path: /etc/profile.d/microk8s.sh
         create: true
-        owner: "{{ lookup('env', 'USER') }}"
+        owner: "{{ microk8s.user }}"
         group: root
         mode: "0755"
         block: |
-          #!/bin/bash
-          alias m8s='microk8s'
+          alias mk8s='microk8s'
           alias mkctl='microk8s kubectl'
+          alias mkns='_mkns(){ microk8s kubectl config set-context microk8s --namespace "$1" ;}; _mkns'
           export KUBECONFIG='{{ microk8s.kubeconfig }}'
 
     - name: Get kubeconfig file output
@@ -62,20 +62,20 @@
       ansible.builtin.blockinfile:
         path: "{{ microk8s.kubeconfig }}"
         create: true
-        owner: "{{ lookup('env', 'USER') }}"
+        owner: "{{ microk8s.user }}"
         mode: "0600"
         marker: "# {mark} ansible managed by https://github.com/OlGe404/microk8s"
         block: "{{ kubeconfig.stdout }}"
 
     - name: Start microk8s
       become: true
-      changed_when: false
       ansible.builtin.command: /snap/bin/microk8s.start
+      tags: skip_ansible_lint
 
     - name: Wait for microk8s to be ready
       become: true
-      changed_when: false
       ansible.builtin.command: /snap/bin/microk8s.status --wait-ready
+      tags: skip_ansible_lint
 
     - name: "Enable microk8s add-ons: {{ microk8s.add_ons | join(', ') }}"
       become: true
@@ -85,14 +85,38 @@
       with_items: "{{ microk8s.add_ons }}"
 
     - name: Deploy kubernetes-dashboard
+      tags: dashboard
       kubernetes.core.k8s:
-        namespace: kube-system
-        template: "{{ query('fileglob', '{{ playbook_dir }}/kubernetes-dashboard/*.yaml') }}"
+        src: https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
         kubeconfig: "{{ microk8s.kubeconfig }}"
 
+    - name: Create nodeport for kubernetes-dashboard
+      tags: dashboard
+      kubernetes.core.k8s:
+        kubeconfig: "{{ microk8s.kubeconfig }}"
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: kubernetes-dashboard-nodeport
+            namespace: kubernetes-dashboard
+            labels:
+              k8s-app: kubernetes-dashboard
+          spec:
+            type: NodePort
+            selector:
+              k8s-app: kubernetes-dashboard
+            ports:
+              - port: 443
+                targetPort: 8443
+                nodePort: 30001
+
     - name: Wait for kubernetes-dashboard rollout to finish
+      tags: dashboard
       become: true
-      ansible.builtin.command: microk8s kubectl rollout status deploy/k8s-dashboard --namespace kube-system
+      ansible.builtin.command: >
+        microk8s kubectl rollout status deploy/kubernetes-dashboard
+        --namespace kubernetes-dashboard
       register: dashboard_status
       changed_when: '"successfully rolled out" in dashboard_status.stdout'
       until: dashboard_status.rc == 0
@@ -100,6 +124,7 @@
       delay: 10
 
     - ansible.builtin.debug:
-        msg: "You can now access the kubernetes-dashbaord at: http://localhost:30001"
+        msg: "You can now access the kubernetes-dashboard at: https://localhost:30001"
       tags:
         - skip_ansible_lint
+        - dashboard
