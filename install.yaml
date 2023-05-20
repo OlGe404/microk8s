@@ -41,9 +41,9 @@
       ansible.builtin.blockinfile:
         path: /etc/profile.d/microk8s.sh
         create: true
-        owner: "{{ microk8s.user }}"
+        owner: root
         group: root
-        mode: "0755"
+        mode: "0644"
         block: |
           alias mk8s='microk8s'
           alias mkctl='microk8s kubectl'
