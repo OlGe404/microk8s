@@ -35,7 +35,7 @@ See `microk8s help` for a list of all available subcommands.
 
 ### Bash aliases
 The playbook creates aliases to ease the usage of `microk8s` and `microk8s kubectl` commands.
-It also exports the KUBECONFIG env so you can work with other clients like oc/kubectl/helm etc.
+It also exports the `KUBECONFIG` env so you can work with other clients like oc/kubectl/helm etc.
 as with any other kubernetes installation.
 
 The following aliases are created:
