@@ -40,11 +40,11 @@ as with any other kubernetes installation.
 
 The following aliases are created:
 
-| Alias | Command                                                         | Notes                                                                       |
-| ----- | --------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| mk8s  | `microk8s`                                                      | For commands controlling microk8s itself, e.g. `mk8s start` or `mk8s stop`  |
-| mkctl | `microk8s kubectl`                                              | To run kubectl commands with the included binary, e.g. `mkctl get services` |
-| mkns  | `microk8s kubectl config set-context microk8s --namespace <ns>` | To set a namespace for subsequent kubectl commands, e.g. `mkns kube-system` |
+| Alias | Command                                                         | Notes                                                                                |
+| ----- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| mk8s  | `microk8s`                                                      | For commands controlling microk8s itself, e.g. `mk8s start` or `mk8s stop`           |
+| mkctl | `microk8s kubectl`                                              | To run kubectl commands with the included binary, e.g. `mkctl get services`          |
+| mkns  | `microk8s kubectl config set-context microk8s --namespace <ns>` | To set a namespace for subsequent microk8s kubectl commands, e.g. `mkns kube-system` |
 
 ## Deinstallation
 To deinstall the microk8s environment, run <code>ansible-playbook deinstall.yaml</code>
