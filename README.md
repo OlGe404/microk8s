@@ -22,6 +22,17 @@ Run the following commands to start the installation:
 
 The UI will be available at <code>http://localhost:30001</code> after the installation.
 
+## Start/Stop microk8s
+After the installation, microk8s will be started but it won't be added to the autostart.
+
+To start microk8s, run `microk8s start && microk8s status --wait-ready`. It can take some time
+for all services to be ready/running and available via nodeports, ingresses etc. even after 
+the command returns.
+
+To stop microk8s, run `microk8s stop`.
+
+See `microk8s help` for a list of all available subcommands.
+
 ### Bash aliases
 The playbook creates aliases to ease the usage of `microk8s` and `microk8s kubectl` commands.
 It also exports the KUBECONFIG env so you can work with other clients like oc/kubectl/helm etc.
