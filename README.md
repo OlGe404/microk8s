@@ -22,7 +22,7 @@ Run the following commands to start the installation:
 
 The UI will be available at <code>http://localhost:30001</code> after the installation.
 
-## Start/Stop microk8s
+### Start/Stop microk8s
 After the installation, microk8s will be started but it won't be added to the autostart.
 
 To start microk8s, run `microk8s start && microk8s status --wait-ready`. It can take some time
