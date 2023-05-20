@@ -16,12 +16,13 @@ spec:
               memory: 128Mi
           args:
             - --insecure-port=8443
+            - --insecure-bind-address=0.0.0.0
             - --auto-generate-certificates=false
             - --enable-insecure-login=true
             - --enable-skip-login
             - --token-ttl=0
             - --namespace=kubernetes-dashboard
-            - "--system-banner=<h5>Local microk8s dashboard ({{ microk8s.dashboard_version }})</h5>"
+            - --system-banner=<h5>Local microk8s dashboard ({{ microk8s.dashboard_version }})</h5>
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
