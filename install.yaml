@@ -14,6 +14,7 @@
     microk8s:
       user: "{{ lookup('env', 'USER') }}"
       kubeconfig: "{{ lookup('env', 'HOME') }}/.kube/microk8s"
+      dashboard_version: v2.7.0
       version: latest/stable
       add_ons:
         - dns
@@ -87,29 +88,14 @@
     - name: Deploy kubernetes-dashboard
       tags: dashboard
       kubernetes.core.k8s:
-        src: https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+        src: "https://raw.githubusercontent.com/kubernetes/dashboard/{{ microk8s.dashboard_version }}/aio/deploy/recommended.yaml"
         kubeconfig: "{{ microk8s.kubeconfig }}"
 
-    - name: Create nodeport for kubernetes-dashboard
+    - name: Patch kubernetes-dashboard
       tags: dashboard
       kubernetes.core.k8s:
         kubeconfig: "{{ microk8s.kubeconfig }}"
-        definition:
-          apiVersion: v1
-          kind: Service
-          metadata:
-            name: kubernetes-dashboard-nodeport
-            namespace: kubernetes-dashboard
-            labels:
-              k8s-app: kubernetes-dashboard
-          spec:
-            type: NodePort
-            selector:
-              k8s-app: kubernetes-dashboard
-            ports:
-              - port: 443
-                targetPort: 8443
-                nodePort: 30001
+        template: "{{ playbook_dir }}/dashboard-patch.yaml"
 
     - name: Wait for kubernetes-dashboard rollout to finish
       tags: dashboard
@@ -124,7 +110,7 @@
       delay: 10
 
     - ansible.builtin.debug:
-        msg: "You can now access the kubernetes-dashboard at: https://localhost:30001"
+        msg: "You can now access the kubernetes-dashboard at: http://localhost:30001"
       tags:
         - skip_ansible_lint
         - dashboard
