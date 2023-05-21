@@ -5,15 +5,7 @@
     - name: sudo_pass
       prompt: "Provide your sudo password to start the deinstallation"
 
-  vars:
-    ansible_connection: local
-    ansible_python_interpreter: "/usr/bin/env python3"
-    ansible_become_method: sudo
-    ansible_sudo_pass: "{{ sudo_pass }}"
-
-    microk8s:
-      user: "{{ lookup('env', 'USER') }}"
-      kubeconfig: "{{ lookup('env', 'HOME') }}/.kube/microk8s"
+  vars_files: vars.yaml
 
   tasks:
     - name: Stop microk8s
