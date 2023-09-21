@@ -25,6 +25,7 @@
       ansible.builtin.command: "gpasswd --delete {{ ansible_user }} microk8s"
 
     - name: Remove conf and created files
+      become: true
       loop:
         - "{{ microk8s_kubeconfig }}"
         - /etc/profile.d/microk8s.sh
