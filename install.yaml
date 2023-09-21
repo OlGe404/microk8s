@@ -1,29 +1,29 @@
+# code: language=ansible
 ---
-- name: Install microk8s
+- name: Install microk8s {{ microk8s_version }}
   hosts: localhost
   gather_facts: false
+  vars_files: vars.yaml
   vars_prompt:
     - name: sudo_pass
       prompt: "Provide your sudo password to start the installation"
 
-  vars_files: vars.yaml
-
   tasks:
-    - name: Install microk8s snap package
+    - name: Install snap package
       become: true
       community.general.snap:
         name: microk8s
         classic: true
-        channel: "{{ microk8s.version }}"
+        channel: "{{ microk8s_version }}"
 
-    - name: Add current user to microk8s group
+    - name: Add user to microk8s group
       become: true
       ansible.builtin.user:
-        name: "{{ microk8s.user }}"
+        name: "{{ ansible_user }}"
         append: true
         groups: microk8s
 
-    - name: Create /etc/profile.d/microk8s.sh to set alias and ENVs
+    - name: Create aliases and ENVs
       become: true
       ansible.builtin.blockinfile:
         path: /etc/profile.d/microk8s.sh
@@ -31,58 +31,52 @@
         owner: root
         group: root
         mode: "0644"
+        marker: "{{ ansible_blockinfile_marker }}"
         block: |
           alias mk8s='microk8s'
           alias mkctl='microk8s kubectl'
           alias mkns='_mkns(){ microk8s kubectl config set-context microk8s --namespace "$1" ;}; _mkns'
-          export KUBECONFIG='{{ microk8s.kubeconfig }}'
+          export KUBECONFIG='{{ microk8s_kubeconfig }}'
 
     - name: Get kubeconfig file output
       become: true
       ansible.builtin.command: microk8s kubectl config view --raw
       register: kubeconfig
-      changed_when: '"apiVersion: v1" in kubeconfig.stdout'
-      failed_when:
-        - kubeconfig.rc != 0
-        - '"apiVersion: v1" not in kubeconfig.stdout'
 
     - name: Create kubeconfig file from output
       ansible.builtin.blockinfile:
-        path: "{{ microk8s.kubeconfig }}"
+        path: "{{ microk8s_kubeconfig }}"
         create: true
-        owner: "{{ microk8s.user }}"
+        owner: "{{ ansible_user }}"
         mode: "0600"
-        marker: "# {mark} ansible managed by https://github.com/OlGe404/microk8s"
+        marker: "{{ ansible_blockinfile_marker }}"
         block: "{{ kubeconfig.stdout }}"
 
     - name: Start microk8s
       become: true
       ansible.builtin.command: /snap/bin/microk8s.start
-      tags: skip_ansible_lint
 
     - name: Wait for microk8s to be ready
       become: true
       ansible.builtin.command: /snap/bin/microk8s.status --wait-ready
-      tags: skip_ansible_lint
 
-    - name: "Enable microk8s add-ons: {{ microk8s.add_ons | join(', ') }}"
+    - name: "Enable microk8s add-ons: {{ microk8s_add_ons | join(', ') }}"
       become: true
       ansible.builtin.command: "microk8s enable {{ item }}"
       register: enable_addon
-      changed_when: false
-      with_items: "{{ microk8s.add_ons }}"
+      with_items: "{{ microk8s_add_ons }}"
 
     - name: Deploy kubernetes-dashboard
       tags: dashboard
       kubernetes.core.k8s:
-        src: "https://raw.githubusercontent.com/kubernetes/dashboard/{{ microk8s.dashboard_version }}/aio/deploy/recommended.yaml"
-        kubeconfig: "{{ microk8s.kubeconfig }}"
+        src: "https://raw.githubusercontent.com/kubernetes/dashboard/{{ microk8s_dashboard_version }}/aio/deploy/recommended.yaml"
+        kubeconfig: "{{ microk8s_kubeconfig }}"
 
     - name: Patch kubernetes-dashboard
       tags: dashboard
       kubernetes.core.k8s:
-        kubeconfig: "{{ microk8s.kubeconfig }}"
         template: "{{ playbook_dir }}/dashboard-patch.yaml"
+        kubeconfig: "{{ microk8s_kubeconfig }}"
 
     - name: Wait for kubernetes-dashboard rollout to finish
       tags: dashboard
@@ -96,8 +90,7 @@
       retries: 30
       delay: 10
 
-    - ansible.builtin.debug:
+    - name: Print kubernetes-dashboard infos
+      ansible.builtin.debug:
         msg: "You can now access the kubernetes-dashboard at: http://localhost:30001"
-      tags:
-        - skip_ansible_lint
-        - dashboard
+      tags: dashboard
