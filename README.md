@@ -18,9 +18,11 @@ ansible-galaxy collection install -r requirements.yaml
 
 ## Install
 Run the following commands to start the installation:
-  * Start with <code>ansible-playbook install.yaml</code> and provide your sudo password
+  * Start with <code>ansible-playbook install.yaml</code>
   * Refresh your shell with <code>su - $(whoami)</code>
   * Ensure the client works with <code>mkctl get pods --all-namespaces</code>
+
+**Note:** If passwordless sudo is disabled on your machine, force ansible to ask for the sudo password by appending <code>--ask-become-pass</code> to the <code>ansible-playbook install.yaml</code> command. 
 
 The kubernetes-dashboard UI will be available at <code>http://localhost:30001</code>.
 You can retrieve a login token with <code>microk8s kubectl get secret kubernetes-dashboard-admin-token -n kubernetes-dashboard -o jsonpath={'.data.token'} | base64 -d | awk '{print $1}'</code>.
@@ -50,4 +52,5 @@ The following aliases are created:
 | mkns  | `microk8s kubectl config set-context microk8s --namespace <ns>` | To set a namespace for subsequent microk8s kubectl commands, e.g. `mkns kube-system` |
 
 ## Deinstall
-To deinstall the microk8s, run <code>ansible-playbook deinstall.yaml</code> and provide your sudo password when prompted.
+To deinstall the microk8s, run <code>ansible-playbook deinstall.yaml</code>.
+If passwordless sudo is disabled, run <code>ansible-playbook deinstall.yaml --ask-become-pass</code> instead.

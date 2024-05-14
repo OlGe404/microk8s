@@ -4,10 +4,6 @@
   hosts: localhost
   gather_facts: false
   vars_files: vars.yaml
-  vars_prompt:
-    - name: sudo_pass
-      prompt: "Provide your sudo password to start the installation"
-
   tasks:
     - name: Install snap package
       become: true
@@ -93,21 +89,22 @@
         chart_version: "7.4.0"
         values_files: dashboard-values.yaml
 
-    - name: Wait for kubernetes-dashboard-web rollout to finish
+    - name: Wait for kubernetes-dashboard rollout to finish
       tags: dashboard
       become: true
-      ansible.builtin.command: >
-        microk8s kubectl rollout status deploy/kubernetes-dashboard-web
-        --namespace kubernetes-dashboard
-      register: dashboard_status
-      changed_when: '"successfully rolled out" in dashboard_status.stdout'
-      until: dashboard_status.rc == 0
-      retries: 30
-      delay: 10
+      ansible.builtin.command: >-
+        microk8s kubectl rollout status deploy/{{ item }}
+        --namespace kubernetes-dashboard --watch --timeout=180s
+      with_items:
+        - kubernetes-dashboard-api
+        - kubernetes-dashboard-auth
+        - kubernetes-dashboard-kong
+        - kubernetes-dashboard-metrics-scraper
+        - kubernetes-dashboard-web
 
     - name: Print kubernetes-dashboard infos
       tags: dashboard
       ansible.builtin.debug:
         msg: >-
           You can now access the kubernetes-dashboard at: http://localhost:30001.
-          See README.md on how to get the required login token. 
+          See README.md on how to get the required login token.

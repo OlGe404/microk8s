@@ -4,10 +4,6 @@
   hosts: localhost
   gather_facts: false
   vars_files: vars.yaml
-  vars_prompt:
-    - name: sudo_pass
-      prompt: "Provide your sudo password to start the deinstallation"
-
   tasks:
     - name: Stop microk8s
       become: true

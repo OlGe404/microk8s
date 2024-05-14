@@ -1,8 +1,5 @@
 ---
 ansible_connection: local
-ansible_python_interpreter: "/usr/bin/env python3"
-ansible_become_method: sudo
-ansible_sudo_pass: "{{ sudo_pass }}"
 ansible_user: "{{ lookup('env', 'USER') }}"
 ansible_blockinfile_marker: >-
   # {mark} ANSIBLE MANAGED BY https://raw.githubusercontent.com/OlGe404/microk8s/master/install.yaml
