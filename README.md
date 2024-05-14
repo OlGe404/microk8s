@@ -23,6 +23,7 @@ Run the following commands to start the installation:
   * Ensure the client works with <code>mkctl get pods --all-namespaces</code>
 
 The kubernetes-dashboard UI will be available at <code>http://localhost:30001</code>.
+You can retrieve a login token with <code>microk8s kubectl get secret kubernetes-dashboard-admin-token -n kubernetes-dashboard -o jsonpath={'.data.token'} | base64 -d | awk '{print $1}'</code>.
 
 ### Interact with microk8s
 After the installation, microk8s will be running but it won't be added to the autostart.

@@ -1,0 +1,42 @@
+---
+app:
+  settings:
+    global:
+      itemsPerPage: 25
+      logsAutoRefreshTimeInterval: 1
+      resourceAutoRefreshTimeInterval: 3
+
+kong:
+  proxy:
+    type: NodePort
+    http:
+      enabled: true
+      nodePort: 30001
+
+extras:
+  manifests:
+    - apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: kubernetes-dashboard-admin
+
+    - apiVersion: rbac.authorization.k8s.io/v1
+      kind: ClusterRoleBinding
+      metadata:
+        name: kubernetes-dashboard-admin
+      roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: cluster-admin
+      subjects:
+      - kind: ServiceAccount
+        name: kubernetes-dashboard-admin
+        namespace: "{{ .Release.Namespace }}"
+
+    - apiVersion: v1
+      kind: Secret
+      metadata:
+        name: kubernetes-dashboard-admin-token
+        annotations:
+          kubernetes.io/service-account.name: "kubernetes-dashboard-admin"   
+      type: kubernetes.io/service-account-token
