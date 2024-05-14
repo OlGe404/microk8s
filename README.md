@@ -6,7 +6,7 @@ Checkout https://microk8s.io/ for more.
 For general prerequisites of microk8s, see https://microk8s.io/docs/getting-started.
 
 To fullfill the prerequisites for the automation in this repo, run these commands to install
-the necessary packages and ansible collections:
+the necessities:
 
 ```
 sudo apt install python3-pip -y && \
