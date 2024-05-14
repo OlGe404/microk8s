@@ -24,17 +24,17 @@ Install microk8s with the following commands:
 **Note:** If passwordless sudo is disabled on your machine, force ansible to ask for the sudo password by appending <code>--ask-become-pass</code> to the <code>ansible-playbook install.yaml</code> command. 
 
 ### Dashboard
-The kubernetes-dashboard will be installed alongside microk8s using the [official helm chart](https://artifacthub.io/packages/helm/k8s-dashboard/kubernetes-dashboard). We don't use the microk8s dashboard add-on on purpose to be able to access the dashboard without using a port-forward/proxy command.
+The kubernetes-dashboard will be installed in microk8s using the [official helm chart](https://artifacthub.io/packages/helm/k8s-dashboard/kubernetes-dashboard).
+We don't use the microk8s dashboard add-on on purpose to be able to access the dashboard without using a port-forward/proxy command.
 
-The dashboard will be available at <code>http://localhost:30001</code> after the installation has finished. You can retrieve a login token with
-<code>microk8s kubectl get secret kubernetes-dashboard-admin-token -n kubernetes-dashboard -o jsonpath={'.data.token'} | base64 -d | awk '{print $1}'</code>.
+The dashboard will be available at <code>http://localhost:30001</code> after the installation and dashboard rollout has finished.
+You can retrieve the login token with <code>microk8s kubectl get secret kubernetes-dashboard-admin-token -n kubernetes-dashboard -o jsonpath={'.data.token'} | base64 -d | awk '{print $1}'</code>.
 
-### Interact with microk8s
+### Work with microk8s
 After the installation, microk8s will be up and running but it won't be added to your systems autostart.
 
-To start microk8s, run `microk8s start && microk8s status --wait-ready`. It can take some time
-for all services to be ready/running and available via nodeports, ingresses etc. even after 
-the command returns.
+To start microk8s, run `microk8s start && microk8s status --wait-ready`.
+It can take some time for all services that are deployed in microk8s to be up and running after the command returns.
 
 To stop microk8s, run `microk8s stop`.
 
