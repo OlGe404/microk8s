@@ -1,7 +1,7 @@
 {
+    "ansible.python.interpreterPath": "/usr/bin/python3",
     "files.associations": {
         "deinstall.yaml": "ansible",
-        "install.yaml": "ansible",
-        "vars.yaml": "ansible"
+        "install.yaml": "ansible"
     }
 }

@@ -1,7 +1,7 @@
 ---
 - name: Install microk8s {{ microk8s_version }}
   hosts: localhost
-  gather_facts: false
+  connection: local
   vars_files: vars.yaml
   tasks:
     - name: Install snap package
@@ -14,7 +14,7 @@
     - name: Add user to microk8s group
       become: true
       ansible.builtin.user:
-        name: "{{ ansible_user }}"
+        name: "{{ ansible_env.USER }}"
         append: true
         groups: microk8s
 
@@ -26,7 +26,7 @@
         owner: root
         group: root
         mode: "0644"
-        marker: "{{ ansible_blockinfile_marker }}"
+        marker: "# {mark} ANSIBLE MANAGED BY https://github.com/OlGe404/microk8s"
         block: |
           alias mk8s='microk8s'
           alias mkctl='microk8s kubectl'
@@ -42,9 +42,9 @@
       ansible.builtin.blockinfile:
         path: "{{ microk8s_kubeconfig }}"
         create: true
-        owner: "{{ ansible_user }}"
+        owner: "{{ ansible_env.USER }}"
         mode: "0600"
-        marker: "{{ ansible_blockinfile_marker }}"
+        marker: "# {mark} ANSIBLE MANAGED BY https://github.com/OlGe404/microk8s"
         block: "{{ kubeconfig.stdout }}"
 
     - name: Start microk8s

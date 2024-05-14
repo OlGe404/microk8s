@@ -21,7 +21,7 @@ Install microk8s with the following commands:
   * Refresh your shell with <code>su - $(whoami)</code>
   * Ensure the client and aliases work with <code>mkctl get pods --all-namespaces</code>
 
-**Note:** If passwordless sudo is disabled on your machine, force ansible to ask for the sudo password by appending <code>--ask-become-pass</code> to the <code>ansible-playbook install.yaml</code> command. 
+**Note:** If passwordless sudo is disabled on your machine, force ansible to ask for the sudo password by appending <code>-K</code> or <code>--ask-become-pass</code> to the <code>ansible-playbook install.yaml</code> command.
 
 ### Dashboard
 The kubernetes-dashboard will be installed in microk8s using the [official helm chart](https://artifacthub.io/packages/helm/k8s-dashboard/kubernetes-dashboard).
@@ -54,4 +54,4 @@ The following aliases are created:
 
 ## Deinstall
 To deinstall microk8s, run <code>ansible-playbook deinstall.yaml</code>.
-If passwordless sudo is disabled, run <code>ansible-playbook deinstall.yaml --ask-become-pass</code> instead.
+If passwordless sudo is disabled, run <code>ansible-playbook deinstall.yaml -K</code> instead.

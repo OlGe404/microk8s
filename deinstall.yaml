@@ -1,10 +1,11 @@
 ---
 - name: Deinstall microk8s
   hosts: localhost
-  gather_facts: false
+  connection: local
   vars_files: vars.yaml
   tasks:
     - name: Stop microk8s
+      tags: skip_ansible_lint
       become: true
       ansible.builtin.command: /snap/bin/microk8s stop
       ignore_errors: true
@@ -17,7 +18,7 @@
 
     - name: Remove current user from microk8s group
       become: true
-      ansible.builtin.command: "gpasswd --delete {{ ansible_user }} microk8s"
+      ansible.builtin.command: "gpasswd --delete {{ ansible_env.USER }} microk8s"
 
     - name: Remove conf and created files
       become: true
