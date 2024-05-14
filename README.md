@@ -16,10 +16,10 @@ ansible-galaxy collection install -r requirements.yaml
 ```
 
 ## Install
-Start the microk8s installation with the following commands:
-  * Start with <code>ansible-playbook install.yaml</code>
+Install microk8s with the following commands:
+  * <code>ansible-playbook install.yaml</code>
   * Refresh your shell with <code>su - $(whoami)</code>
-  * Ensure the client works with <code>mkctl get pods --all-namespaces</code>
+  * Ensure the client and aliases work with <code>mkctl get pods --all-namespaces</code>
 
 **Note:** If passwordless sudo is disabled on your machine, force ansible to ask for the sudo password by appending <code>--ask-become-pass</code> to the <code>ansible-playbook install.yaml</code> command. 
 
