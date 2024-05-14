@@ -5,7 +5,7 @@ Checkout https://microk8s.io/ for more.
 ## Prerequisites
 For general prerequisites of microk8s, see https://microk8s.io/docs/getting-started.
 
-Run these commands to install the necessities for the automation:
+Run these commands to install the necessities for this repo:
 
 ```
 sudo apt install python3-pip -y && \
@@ -16,18 +16,22 @@ ansible-galaxy collection install -r requirements.yaml
 ```
 
 ## Install
-Run the following commands to start the installation:
+Start the microk8s installation with the following commands:
   * Start with <code>ansible-playbook install.yaml</code>
   * Refresh your shell with <code>su - $(whoami)</code>
   * Ensure the client works with <code>mkctl get pods --all-namespaces</code>
 
 **Note:** If passwordless sudo is disabled on your machine, force ansible to ask for the sudo password by appending <code>--ask-become-pass</code> to the <code>ansible-playbook install.yaml</code> command. 
 
-The kubernetes-dashboard UI will be available at <code>http://localhost:30001</code>.
-You can retrieve a login token with <code>microk8s kubectl get secret kubernetes-dashboard-admin-token -n kubernetes-dashboard -o jsonpath={'.data.token'} | base64 -d | awk '{print $1}'</code>.
+### Dashboard
+The kubernetes-dashboard will be installed alongside microk8s using the official helm chart. We don't use the dashboard add-on on purpose to be able
+to access the dashboard without using a port-forward/proxy command.
+
+The dashboard will be available at <code>http://localhost:30001</code> after the installation has finished. You can retrieve a login token with
+<code>microk8s kubectl get secret kubernetes-dashboard-admin-token -n kubernetes-dashboard -o jsonpath={'.data.token'} | base64 -d | awk '{print $1}'</code>.
 
 ### Interact with microk8s
-After the installation, microk8s will be running but it won't be added to the autostart.
+After the installation, microk8s will be up and running but it won't be added to your systems autostart.
 
 To start microk8s, run `microk8s start && microk8s status --wait-ready`. It can take some time
 for all services to be ready/running and available via nodeports, ingresses etc. even after 
@@ -39,8 +43,8 @@ See `microk8s help` for a list of all available subcommands.
 
 ### Aliases
 The playbook creates aliases to ease the usage of `microk8s` and `microk8s kubectl` commands.
-It also exports the `KUBECONFIG` env so you can work with other clients like oc/kubectl/helm etc.
-as with any other kubernetes installation.
+It also exports the `KUBECONFIG` ENV so you can work with other clients like oc/kubectl/helm etc.
+as usual.
 
 The following aliases are created:
 
@@ -51,5 +55,5 @@ The following aliases are created:
 | mkns  | `microk8s kubectl config set-context microk8s --namespace <ns>` | To set a namespace for subsequent microk8s kubectl commands, e.g. `mkns kube-system` |
 
 ## Deinstall
-To deinstall the microk8s, run <code>ansible-playbook deinstall.yaml</code>.
+To deinstall microk8s, run <code>ansible-playbook deinstall.yaml</code>.
 If passwordless sudo is disabled, run <code>ansible-playbook deinstall.yaml --ask-become-pass</code> instead.
