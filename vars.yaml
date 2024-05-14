@@ -2,7 +2,7 @@
 ansible_connection: local
 ansible_user: "{{ lookup('env', 'USER') }}"
 ansible_blockinfile_marker: >-
-  # {mark} ANSIBLE MANAGED BY https://raw.githubusercontent.com/OlGe404/microk8s/master/install.yaml
+  # {mark} ANSIBLE MANAGED BY https://github.com/OlGe404/microk8s
 
 microk8s_version: 1.30/stable
 microk8s_kubeconfig: "{{ lookup('env', 'HOME') }}/.kube/microk8s"
