@@ -25,7 +25,7 @@ Install microk8s with the following commands:
 
 ### Dashboard
 The kubernetes-dashboard will be installed in microk8s using the [official helm chart](https://artifacthub.io/packages/helm/k8s-dashboard/kubernetes-dashboard).
-We don't use the microk8s dashboard add-on on purpose to be able to access the dashboard without using a port-forward/proxy command.
+We don't use the microk8s dashboard add-on to be able to customize the installation and access the dashboard without using a port-forward/proxy command.
 
 The dashboard will be available at <code>http://localhost:30001</code> after the microk8s installation and dashboard rollout has finished.
 You can retrieve the login token for the dashboard with <code>microk8s kubectl get secret kubernetes-dashboard-admin-token -n kubernetes-dashboard -o jsonpath={'.data.token'} | base64 -d | awk '{print $1}'</code>.
