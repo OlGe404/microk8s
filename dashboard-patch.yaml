@@ -10,10 +10,6 @@ spec:
       containers:
         - name: kubernetes-dashboard
           image: "kubernetesui/dashboard:{{ microk8s_dashboard_version }}"
-          resources:
-            requests:
-              cpu: 100m
-              memory: 128Mi
           args:
             - --insecure-port=8443
             - --insecure-bind-address=0.0.0.0
@@ -22,7 +18,6 @@ spec:
             - --enable-skip-login
             - --token-ttl=0
             - --namespace=kubernetes-dashboard
-            - --system-banner=<h5>Localhost microk8s dashboard</h5>
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
