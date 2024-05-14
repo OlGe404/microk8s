@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "deinstall.yaml": "ansible",
+        "install.yaml": "ansible",
+        "vars.yaml": "ansible"
+    }
+}
