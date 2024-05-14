@@ -63,8 +63,19 @@
     - name: "Enable microk8s add-ons: {{ microk8s_add_ons | join(', ') }}"
       become: true
       ansible.builtin.command: "microk8s enable {{ item }}"
-      register: enable_addon
       with_items: "{{ microk8s_add_ons }}"
+
+    - name: Community addons
+      when: microk8s_community_addons|length > 0
+      block:
+        - name: Enable community addons repo
+          become: true
+          ansible.builtin.command: microk8s enable community
+
+        - name: "Install community add-ons: {{ microk8s_community_addons | join(', ') }}"
+          become: true
+          ansible.builtin.command: "microk8s enable {{ item }}"
+          with_items: "{{ microk8s_community_addons }}"
 
     - name: Deploy kubernetes-dashboard
       tags: dashboard
