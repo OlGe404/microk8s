@@ -20,5 +20,5 @@ jobs:
       - name: Prerequisites
         run: ./prerequisites.sh
       
-      - name: Ansible checks
+      - name: Ansible playbook checks
         run: ansible-playbook install.yaml --check
