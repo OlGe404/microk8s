@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 sudo apt install python3-pip -y
 sudo snap install helm --classic
