@@ -61,7 +61,7 @@
       become: true
       ansible.builtin.command: /snap/bin/microk8s.status --wait-ready
 
-    - name: "Enable microk8s add-ons: {{ microk8s_add_ons | join(', ') }}"
+    - name: "Enable microk8s add-ons {{ microk8s_add_ons | join(', ') }}"
       become: true
       ansible.builtin.command: "microk8s enable {{ item }}"
       with_items: "{{ microk8s_add_ons }}"
@@ -73,7 +73,7 @@
           become: true
           ansible.builtin.command: microk8s enable community
 
-        - name: "Install community add-ons: {{ microk8s_community_addons | join(', ') }}"
+        - name: "Install community add-ons {{ microk8s_community_addons | join(', ') }}"
           become: true
           ansible.builtin.command: "microk8s enable {{ item }}"
           with_items: "{{ microk8s_community_addons }}"
