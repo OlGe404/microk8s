@@ -29,13 +29,15 @@
         marker: "# {mark} ANSIBLE MANAGED BY https://github.com/OlGe404/microk8s"
         block: |
           alias mk8s='microk8s'
-          {% if microk8s_manage_kubectl_installation %}
+          {% if microk8s_manage_kubectl %}
           alias kubectl='microk8s kubectl'
           {% else %}
           alias mkctl='microk8s kubectl'
           {% endif %}
           alias mkns='_mkns(){ microk8s kubectl config set-context microk8s --namespace "$1" ;}; _mkns'
+          {% if microk8s_manage_kubeconfig %}
           export KUBECONFIG='{{ microk8s_kubeconfig }}'
+          {% endif %}
 
     - name: Get kubeconfig file output
       become: true

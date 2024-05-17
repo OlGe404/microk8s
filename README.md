@@ -30,14 +30,13 @@ We don't use the microk8s dashboard add-on to be able to customize the installat
 You can retrieve the login token for the dashboard with <code>microk8s kubectl get secret kubernetes-dashboard-admin-token -n kubernetes-dashboard -o jsonpath={'.data.token'} | base64 -d | awk '{print $1}'</code>.
 
 ### Work with microk8s
-After the installation, microk8s will be up and running but it won't be added to your systems autostart.
+After the installation is done, microk8s will be up and running but it won't be added to your systems autostart. To start microk8s, run `microk8s start && microk8s status --wait-ready`. It can take some time for all services that are deployed in microk8s to be up and running, even after the command returns.
 
-To start microk8s, run `microk8s start && microk8s status --wait-ready`.
-It can take some time for all services that are deployed in microk8s to be up and running after the command returns.
+To stop microk8s, run `microk8s stop`. See `microk8s help` for a list of all available subcommands.
 
-To stop microk8s, run `microk8s stop`.
+The kubeconfig file to interact with microk8s will be created at <code>~/.kube/microk8s</code>. To use it, set <code>export KUBECONFIG=~/.kube/microk8s</code>. This can be done by the playbook, if <code>microk8s_manage_kubeconfig=true</code>.
 
-See `microk8s help` for a list of all available subcommands.
+Microk8s is bundled with the kubectl cli. If you don't have kubectl installed, or you only want to use it in the microk8s context, set <code>microk8s_manage_kubectl=true</code> to let the installation create a <code>kubectl='microk8s kubectl'</code> alias for you.
 
 ### Aliases
 The playbook creates aliases to ease the usage of `microk8s` and `microk8s kubectl` commands.
