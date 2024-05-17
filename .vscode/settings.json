@@ -2,6 +2,10 @@
     "ansible.python.interpreterPath": "/usr/bin/python3",
     "files.associations": {
         "deinstall.yaml": "ansible",
-        "install.yaml": "ansible"
+        "install.yaml": "ansible",
+        "requirements.txt": "pip-requirements"
+    },
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/requirements.json": "requirements.yaml"
     }
 }
