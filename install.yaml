@@ -11,6 +11,11 @@
         classic: true
         channel: "{{ microk8s_version }}"
 
+    - name: Ensure microk8s group
+      become: true
+      ansible.builtin.group:
+        name: microk8s
+
     - name: Add user to microk8s group
       become: true
       ansible.builtin.user:
