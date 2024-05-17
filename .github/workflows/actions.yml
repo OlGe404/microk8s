@@ -22,11 +22,11 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: prerequisites
+      - name: Prerequisites
         run: ./prerequisites.sh
       
-      - name: ansible-playbook
+      - name: Ansible
         run: ansible-playbook install.yaml
