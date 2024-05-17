@@ -4,4 +4,4 @@ collections:
     version: 8.6.0
 
   - name: kubernetes.core
-    version: 2.4.2 
+    version: 3.1.0 
