@@ -1,0 +1,24 @@
+---
+name: PRs
+run-name: PR - ${{ github.event.pull_request.title }}
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.event.pull_request.title }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prerequisites
+        run: ./prerequisites.sh
+      
+      - name: Ansible checks
+        run: ansible-playbook install.yaml --check

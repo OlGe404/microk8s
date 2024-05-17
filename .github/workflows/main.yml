@@ -1,5 +1,5 @@
 ---
-name: install microk8s
+name: main
 on:
   push:
     branches:
