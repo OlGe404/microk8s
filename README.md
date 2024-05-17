@@ -34,7 +34,7 @@ After the installation is done, microk8s will be up and running but it won't be 
 
 To stop microk8s, run `microk8s stop`. See `microk8s help` for a list of all available subcommands.
 
-The kubeconfig file to interact with microk8s will be created at <code>~/.kube/microk8s</code>. To use it, set <code>export KUBECONFIG=~/.kube/microk8s</code>. This can be done by the playbook, if <code>microk8s_manage_kubeconfig=true</code>.
+The kubeconfig file to interact with microk8s will be created at <code>~/.kube/microk8s</code> and an alias will be created automatically to set <code>export KUBECONFIG=~/.kube/microk8s</code> on login. If you don't want to use that, set <code>microk8s_manage_kubeconfig=false</code>.
 
 Microk8s is bundled with the kubectl cli. If you don't have kubectl installed, or you only want to use it in the microk8s context, set <code>microk8s_manage_kubectl=true</code> to let the installation create a <code>kubectl='microk8s kubectl'</code> alias for you.
 
