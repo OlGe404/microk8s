@@ -1,6 +1,7 @@
 ---
 microk8s_version: 1.30/stable
-microk8s_kubeconfig: "{{ lookup('env', 'HOME') }}/.kube/microk8s"
+microk8s_kubeconfig: "{{ ansible_env.HOME }}/.kube/microk8s"
+microk8s_manage_kubectl_installation: false
 
 # See https://microk8s.io/docs/addons for a list of available addons.
 microk8s_add_ons:

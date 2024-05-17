@@ -29,7 +29,11 @@
         marker: "# {mark} ANSIBLE MANAGED BY https://github.com/OlGe404/microk8s"
         block: |
           alias mk8s='microk8s'
+          {% if microk8s_manage_kubectl_installation %}
+          alias kubectl='microk8s kubectl'
+          {% else %}
           alias mkctl='microk8s kubectl'
+          {% endif %}
           alias mkns='_mkns(){ microk8s kubectl config set-context microk8s --namespace "$1" ;}; _mkns'
           export KUBECONFIG='{{ microk8s_kubeconfig }}'
 
@@ -61,7 +65,7 @@
       with_items: "{{ microk8s_add_ons }}"
 
     - name: Community addons
-      when: microk8s_community_addons|length > 0
+      when: microk8s_community_addons | length > 0
       block:
         - name: Enable community addons repo
           become: true
@@ -77,7 +81,7 @@
       kubernetes.core.helm_repository:
         name: kubernetes-dashboard
         url: https://kubernetes.github.io/dashboard/
-    
+
     - name: Install kubernetes-dashboard
       tags: dashboard
       kubernetes.core.helm:
