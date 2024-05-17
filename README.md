@@ -5,15 +5,7 @@ Checkout https://microk8s.io/ for more.
 ## Prerequisites
 For general prerequisites of microk8s, see https://microk8s.io/docs/getting-started.
 
-Run these commands to install the necessities for this repo:
-
-```
-sudo apt install python3-pip -y && \
-sudo snap install helm --classic && \
-helm plugin install https://github.com/databus23/helm-diff --version v3.9.6 && \
-python3 -m pip install --upgrade --user -r requirements.txt && \
-ansible-galaxy collection install -r requirements.yaml
-```
+Run <code>./prerequisites.sh</code> to install the prerequisites for this repo.
 
 ## Install
 Install microk8s with the following commands:
