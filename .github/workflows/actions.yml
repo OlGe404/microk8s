@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+concurrency:
+  group: actions
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-22.04
