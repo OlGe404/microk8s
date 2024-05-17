@@ -1,0 +1,19 @@
+---
+name: install microk8s
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: prerequisites
+        run: ./prerequisites.sh
+      
+      - name: ansible-playbook
+        run: ansible-playbook install.yaml
