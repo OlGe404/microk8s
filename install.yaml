@@ -11,6 +11,12 @@
         classic: true
         channel: "{{ microk8s_version }}"
 
+    - name: Ensure microk8s group
+      become: true
+      check_mode: false
+      ansible.builtin.group:
+        name: microk8s
+
     - name: Add user to microk8s group
       become: true
       ansible.builtin.user:
@@ -87,6 +93,7 @@
 
     - name: Install kubernetes-dashboard
       tags: dashboard
+      when: not ansible_check_mode
       kubernetes.core.helm:
         kubeconfig: "{{ microk8s_kubeconfig }}"
         release_name: kubernetes-dashboard
