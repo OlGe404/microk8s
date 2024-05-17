@@ -46,5 +46,3 @@ The following aliases are created:
 ## Deinstall
 To deinstall microk8s, run <code>ansible-playbook deinstall.yaml</code>.
 If passwordless sudo is disabled, run <code>ansible-playbook deinstall.yaml -K</code> instead.
-
-ignoretest
