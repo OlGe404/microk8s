@@ -5,6 +5,13 @@ on:
     branches:
       - main
 
+    paths-ignore:
+      - .vscode/settings.json
+      - .ansible-lint
+      - .gitignore
+      - LICENSE
+      - README.md
+
 concurrency:
   group: actions
   cancel-in-progress: true
