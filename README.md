@@ -41,6 +41,7 @@ The following aliases are created:
 | mk8s  | `microk8s`                                                      | For commands controlling microk8s itself, e.g. `mk8s start` or `mk8s stop`           |
 | mkctl | `microk8s kubectl`                                              | To run kubectl commands with the included binary, e.g. `mkctl get services`          |
 | mkns  | `microk8s kubectl config set-context microk8s --namespace <ns>` | To set a namespace for subsequent microk8s kubectl commands, e.g. `mkns kube-system` |
+| mktoken | 'microk8s kubectl get secret kubernetes-dashboard-admin-token -n kubernetes-dashboard -o jsonpath={'.data.token'} | base64 -d | awk '{print $1}'' | Get the login token for the kubernetes-dashboard |
 
 ## Deinstall
 To deinstall microk8s, run <code>ansible-playbook deinstall.yaml</code>.

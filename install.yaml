@@ -29,6 +29,7 @@
         marker: "# {mark} ANSIBLE MANAGED BY https://github.com/OlGe404/microk8s"
         block: |
           alias mk8s='microk8s'
+          alias mktoken='microk8s kubectl get secret kubernetes-dashboard-admin-token -n kubernetes-dashboard -o jsonpath={'.data.token'} | base64 -d | awk "{print $1}"'
           {% if microk8s_manage_kubectl %}
           alias kubectl='microk8s kubectl'
           {% else %}
@@ -113,4 +114,4 @@
       ansible.builtin.debug:
         msg: >-
           You can now access the kubernetes-dashboard at: http://localhost:30001.
-          See README.md on how to get the required login token.
+          Run 'source /etc/profile.d/microk8s.sh' and 'mktoken' to retrieve your login token.
