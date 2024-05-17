@@ -9,8 +9,10 @@ on:
       - .vscode/settings.json
       - .ansible-lint
       - .gitignore
+      - deinstall.yaml
       - LICENSE
       - README.md
+      - renovate.json
 
 concurrency:
   group: actions
