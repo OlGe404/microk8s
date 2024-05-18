@@ -3,10 +3,10 @@
     "extends": [ "config:recommended" ],
     "customManagers": [
       {
-        "fileMatch": [ "vars.yaml" ],
+        "fileMatch": [ "vars\\.yaml" ],
         "datasourceTemplate": "github-tags",
         "depNameTemplate": "https://github.com/canonical/microk8s",
-        "matchStrings": ["^microk8s_version\\:\\s+(?<currentValue>.+)\\/stable"],
+        "matchStrings": ["^microk8s\\_version\\:\\s+(?<currentValue>.+)\\/stable"],
         "versioningTemplate": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
       }
     ]
