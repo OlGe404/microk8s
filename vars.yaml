@@ -1,8 +1,9 @@
 ---
-microk8s_version: 1.30/stable
+microk8s_version: 1.29/stable
 microk8s_kubeconfig: "{{ ansible_env.HOME }}/.kube/microk8s"
 microk8s_manage_kubectl: false
 microk8s_manage_kubeconfig: true
+microk8s_kubernetes_dashboard_chart_version: "7.4.0"
 
 # See https://microk8s.io/docs/addons for a list of available addons.
 microk8s_add_ons:
