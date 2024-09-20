@@ -1,2 +1,2 @@
 ansible==9.5.1
-kubernetes==29.0.0
+kubernetes==31.0.0
