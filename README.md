@@ -31,7 +31,7 @@ It can take some time for all services to be up and running, even after the comm
 
 To stop microk8s, run `microk8s stop`. See `microk8s help` for a list of all available subcommands.
 
-The kubeconfig file to interact with microk8s will be created at <code>~/.kube/microk8s</code> and an alias will be created automatically to set <code>export KUBECONFIG=~/.kube/microk8s</code> on shell login. If you don't want that, append <code>-e microk8s_manage_kubeconfig=false</code>
+The kubeconfig file to interact with microk8s will be created at `~/.kube/microk8s` and an alias will be created automatically to set <code>export KUBECONFIG=~/.kube/microk8s</code> on shell login. If you don't want that, append <code>-e microk8s_manage_kubeconfig=false</code>
 to the <code>ansible-playbook install.yaml</code> command.
 
 Microk8s is bundled with the kubectl cli. If you don't have kubectl installed, or you only want to use it in the microk8s context,
